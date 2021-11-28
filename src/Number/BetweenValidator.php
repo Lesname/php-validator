@@ -15,7 +15,7 @@ final class BetweenValidator implements Validator
     public function __construct(public float | int $minimal, public float | int $maximal)
     {}
 
-    public function validate(mixed $input): ValidateResult\ValidateResult
+    public function validate(mixed $input): ValidateResult\
     {
         assert(is_float($input) || is_int($input), new RuntimeException());
 

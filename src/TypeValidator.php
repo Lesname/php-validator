@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace LessValidator;
 
 use LessValidator\ValidateResult\ErrorValidateResult;
+use LessValidator\ValidateResult\ValidateResult;
 use LessValidator\ValidateResult\ValidValidateResult;
 use RuntimeException;
 
@@ -22,7 +23,7 @@ final class TypeValidator implements Validator
     public function __construct(public string $type)
     {}
 
-    public function validate(mixed $input): ValidateResult\ValidateResult
+    public function validate(mixed $input): ValidateResult
     {
         $valid = match ($this->type) {
             self::BOOLEAN => is_bool($input),

@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace LessValidator;
 
+use LessValidator\ValidateResult\ValidateResult;
 use LessValidator\ValidateResult\ValidValidateResult;
 
 /**
@@ -21,7 +22,7 @@ final class ChainValidator implements Validator
         }
     }
 
-    public function validate(mixed $input): ValidateResult\ValidateResult
+    public function validate(mixed $input): ValidateResult
     {
         foreach ($this->validators as $validator) {
             $result = $validator->validate($input);

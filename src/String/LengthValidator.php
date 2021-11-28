@@ -3,7 +3,9 @@ declare(strict_types=1);
 
 namespace LessValidator\String;
 
-use LessValidator\ValidateResult;
+use LessValidator\ValidateResult\ErrorValidateResult;
+use LessValidator\ValidateResult\ValidateResult;
+use LessValidator\ValidateResult\ValidValidateResult;
 use LessValidator\Validator;
 use RuntimeException;
 
@@ -17,7 +19,7 @@ final class LengthValidator implements Validator
         public int $maxLength,
     ) {}
 
-    public function validate(mixed $input): ValidateResult\ValidateResult
+    public function validate(mixed $input): ValidateResult
     {
         assert(is_string($input), new RuntimeException());
 
@@ -29,13 +31,13 @@ final class LengthValidator implements Validator
         ];
 
         if ($length < $this->minLength) {
-            return new ValidateResult\ErrorValidateResult('string.length.tooShort', $context);
+            return new ErrorValidateResult('string.length.tooShort', $context);
         }
 
         if ($length > $this->maxLength) {
-            return new ValidateResult\ErrorValidateResult('string.length.tooLong', $context);
+            return new ErrorValidateResult('string.length.tooLong', $context);
         }
 
-        return new ValidateResult\ValidValidateResult();
+        return new ValidValidateResult();
     }
 }

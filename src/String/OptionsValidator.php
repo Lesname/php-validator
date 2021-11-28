@@ -3,7 +3,9 @@ declare(strict_types=1);
 
 namespace LessValidator\String;
 
-use LessValidator\ValidateResult;
+use LessValidator\ValidateResult\ErrorValidateResult;
+use LessValidator\ValidateResult\ValidateResult;
+use LessValidator\ValidateResult\ValidValidateResult;
 use LessValidator\Validator;
 
 /**
@@ -22,13 +24,13 @@ final class OptionsValidator implements Validator
         }
     }
 
-    public function validate(mixed $input): ValidateResult\ValidateResult
+    public function validate(mixed $input): ValidateResult
     {
         if (in_array($input, $this->options, true)) {
-            return new ValidateResult\ValidValidateResult();
+            return new ValidValidateResult();
         }
 
-        return new ValidateResult\ErrorValidateResult(
+        return new ErrorValidateResult(
             'string.options.notAllowed',
             ['options' => $this->options],
         );
