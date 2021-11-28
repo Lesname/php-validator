@@ -35,7 +35,7 @@ final class TypeValidator implements Validator
         };
 
         return !$valid
-            ? new ErrorValidateResult("typeExpected.{$this->type}")
+            ? new ErrorValidateResult("type.expected.{$this->type}")
             : new ValidValidateResult();
     }
 
