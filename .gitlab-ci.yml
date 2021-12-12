@@ -24,7 +24,7 @@ phpstan80:
   extends: .php80
   stage: quality
   except:
-    - master
+    - main
   script:
     - ./vendor/bin/phpstan analyse -c phpstan.neon
 
@@ -32,7 +32,7 @@ phpstan81:
   extends: .php81
   stage: quality
   except:
-    - master
+    - main
   script:
     - ./vendor/bin/phpstan analyse -c phpstan.neon
 
@@ -42,7 +42,7 @@ phpcs80:
   extends: .php80
   stage: quality
   except:
-    - master
+    - main
   script:
     - ./vendor/bin/phpcs --standard=./phpcs.xml
 
@@ -50,7 +50,7 @@ phpcs81:
   extends: .php81
   stage: quality
   except:
-    - master
+    - main
   script:
     - ./vendor/bin/phpcs --standard=./phpcs.xml
 
@@ -60,7 +60,7 @@ phpunit80:
   extends: .php80
   stage: quality
   except:
-    - master
+    - main
   script:
     - ./vendor/bin/phpunit -c phpunit.xml --do-not-cache-result
 
@@ -68,7 +68,7 @@ phpunit81:
   extends: .php81
   stage: quality
   except:
-    - master
+    - main
   script:
     - ./vendor/bin/phpunit -c phpunit.xml --do-not-cache-result
 
@@ -78,7 +78,7 @@ psalm80:
   extends: .php80
   stage: quality
   except:
-    - master
+    - main
   script:
     - ./vendor/bin/psalm
 
@@ -86,12 +86,14 @@ psalm81:
   extends: .php81
   stage: quality
   except:
-    - master
+    - main
   script:
     - ./vendor/bin/psalm
 
 sast:
   stage: quality
+  except:
+    - main
 
 include:
   - template: Security/SAST.gitlab-ci.yml
