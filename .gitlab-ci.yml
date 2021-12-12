@@ -89,3 +89,9 @@ psalm81:
     - master
   script:
     - ./vendor/bin/psalm
+
+sast:
+  stage: quality
+
+include:
+  - template: Security/SAST.gitlab-ci.yml
