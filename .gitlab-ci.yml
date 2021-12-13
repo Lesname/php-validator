@@ -89,11 +89,3 @@ psalm81:
     - main
   script:
     - ./vendor/bin/psalm
-
-sast:
-  stage: quality
-  except:
-    - main
-
-include:
-  - template: Security/SAST.gitlab-ci.yml
