@@ -44,6 +44,8 @@ final class TypeValidator implements Validator
      * @psalm-suppress UnusedForeachValue for polyfill
      *
      * @todo php 8.1 use array_is_list
+     *
+     * @psalm-suppress MixedAssignment
      */
     private function isCollection(mixed $input): bool
     {
@@ -71,6 +73,8 @@ final class TypeValidator implements Validator
      * @psalm-suppress UnusedForeachValue for polyfill
      *
      * @todo php 8.1 use array_is_list
+     *
+     * @psalm-suppress MixedAssignment
      */
     private function isComposite(mixed $input): bool
     {
