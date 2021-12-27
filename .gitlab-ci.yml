@@ -17,6 +17,7 @@
 
 stages:
   - quality
+  - deploy
 
 # PHPStan
 
@@ -89,3 +90,12 @@ psalm81:
     - main
   script:
     - ./vendor/bin/psalm
+
+# Deploy
+
+deploy_composer:
+  only:
+    - tags
+  stage: deploy
+  script:
+    - curl --data tag=${CI_COMMIT_TAG} "https://__token__:${REGISTERY_TOKEN}@gitlab.com/api/v4/projects/${CI_PROJECT_ID}/packages/composer"
