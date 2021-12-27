@@ -16,6 +16,9 @@ final class ItemsValidator implements Validator
     public function __construct(public Validator $itemValidator)
     {}
 
+    /**
+     * @psalm-suppress MixedAssignment
+     */
     public function validate(mixed $input): ValidateResult
     {
         assert(is_array($input), new RuntimeException());
