@@ -12,27 +12,24 @@ use LessValidator\Validator;
 /**
  * @psalm-immutable
  */
-final class BetweenValidator implements Validator
+final class PrecisionValidator implements Validator
 {
-    public function __construct(public float | int $minimal, public float | int $maximal)
-    {}
+    public function __construct(private int $precision)
+    {
+        assert($precision >= 1 && $precision <= 5, "Precision must be between 1 and 5, given {$precision}");
+    }
 
     public function validate(mixed $input): ValidateResult
     {
         assert(is_float($input) || is_int($input), new UnexpectedType('number', get_debug_type($input)));
 
-        if ($input < $this->minimal) {
-            return new ErrorValidateResult(
-                'number.between.tooLittle',
-                ['minimal' => $this->minimal],
-            );
-        }
-
-        if ($input > $this->maximal) {
-            return new ErrorValidateResult(
-                'number.between.tooGreat',
-                ['maximal' => $this->maximal],
-            );
+        if (is_float($input) && preg_match('/\.(\d*)$/', (string)$input, $matches)) {
+            if (strlen($matches[1]) > $this->precision) {
+                return new ErrorValidateResult(
+                    'number.precision',
+                    ['max' => $this->precision],
+                );
+            }
         }
 
         return new ValidValidateResult();

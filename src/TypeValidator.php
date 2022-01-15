@@ -23,6 +23,54 @@ final class TypeValidator implements Validator
     public function __construct(public string $type)
     {}
 
+    /**
+     * @psalm-pure
+     */
+    public static function boolean(): self
+    {
+        return new self(self::BOOLEAN);
+    }
+
+    /**
+     * @psalm-pure
+     */
+    public static function collection(): self
+    {
+        return new self(self::COLLECTION);
+    }
+
+    /**
+     * @psalm-pure
+     */
+    public static function composite(): self
+    {
+        return new self(self::COMPOSITE);
+    }
+
+    /**
+     * @psalm-pure
+     */
+    public static function integer(): self
+    {
+        return new self(self::INTEGER);
+    }
+
+    /**
+     * @psalm-pure
+     */
+    public static function number(): self
+    {
+        return new self(self::NUMBER);
+    }
+
+    /**
+     * @psalm-pure
+     */
+    public static function string(): self
+    {
+        return new self(self::STRING);
+    }
+
     public function validate(mixed $input): ValidateResult
     {
         $valid = match ($this->type) {

@@ -3,11 +3,11 @@ declare(strict_types=1);
 
 namespace LessValidator\Composite;
 
+use LessValidator\Exception\UnexpectedType;
 use LessValidator\ValidateResult\ErrorValidateResult;
 use LessValidator\ValidateResult\ValidateResult;
 use LessValidator\ValidateResult\ValidValidateResult;
 use LessValidator\Validator;
-use RuntimeException;
 
 /**
  * @psalm-immutable
@@ -27,7 +27,7 @@ final class PropertyKeysValidator implements Validator
 
     public function validate(mixed $input): ValidateResult
     {
-        assert(is_array($input), new RuntimeException());
+        assert(is_array($input), new UnexpectedType('array', get_debug_type($input)));
 
         $diff = array_diff(array_keys($input), $this->keys);
 
