@@ -3,10 +3,10 @@ declare(strict_types=1);
 
 namespace LessValidator\Composite;
 
+use LessValidator\Exception\UnexpectedType;
 use LessValidator\ValidateResult\Composite\PropertiesValidateResult;
 use LessValidator\ValidateResult\ValidateResult;
 use LessValidator\Validator;
-use RuntimeException;
 
 /**
  * @psalm-immutable
@@ -28,7 +28,7 @@ final class PropertyValuesValidator implements Validator
     {
         return new PropertiesValidateResult(
             (function (mixed $input): iterable {
-                assert(is_array($input), new RuntimeException());
+                assert(is_array($input), new UnexpectedType('array', get_debug_type($input)));
 
                 foreach ($this->proprtyValueValidators as $name => $proprtyValueValidator) {
                     yield $name => $proprtyValueValidator->validate($input[$name] ?? null);
