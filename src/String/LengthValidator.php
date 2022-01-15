@@ -3,11 +3,11 @@ declare(strict_types=1);
 
 namespace LessValidator\String;
 
+use LessValidator\Exception\UnexpectedType;
 use LessValidator\ValidateResult\ErrorValidateResult;
 use LessValidator\ValidateResult\ValidateResult;
 use LessValidator\ValidateResult\ValidValidateResult;
 use LessValidator\Validator;
-use RuntimeException;
 
 /**
  * @psalm-immutable
@@ -21,7 +21,7 @@ final class LengthValidator implements Validator
 
     public function validate(mixed $input): ValidateResult
     {
-        assert(is_string($input), new RuntimeException());
+        assert(is_string($input), new UnexpectedType('string', get_debug_type($input)));
 
         $length = mb_strlen($input);
         $context = [
