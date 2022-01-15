@@ -22,6 +22,11 @@ final class FormatValidator implements Validator
     public function __construct(public string $format)
     {}
 
+    /**
+     * @throws \ReflectionException
+     *
+     * @psalm-suppress ImpureMethodCall getShortName
+     */
     public function validate(mixed $input): ValidateResult
     {
         assert(is_string($input), new UnexpectedType('string', get_debug_type($input)));

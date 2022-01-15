@@ -14,21 +14,22 @@ use LessValidator\Validator;
 final class ItemsValidator implements Validator
 {
     public function __construct(public Validator $itemValidator)
-    {}
+    {
+    }
 
-    /**
-     * @psalm-suppress MixedAssignment
-     */
     public function validate(mixed $input): ValidateResult
     {
         assert(is_array($input), new UnexpectedType('array', get_debug_type($input)));
+        /** @var array<int, mixed> $input */
+
+        $itemValidator = $this->itemValidator;
 
         return new ItemsValidateResult(
-            (function (mixed $input): iterable {
-                foreach ($input as $value) {
-                    yield $this->itemValidator->validate($value);
-                }
-            })($input),
+            array_map(
+                /** @psalm-pure  */
+                fn (mixed $item): ValidateResult => $itemValidator->validate($item),
+                $input,
+            ),
         );
     }
 }
