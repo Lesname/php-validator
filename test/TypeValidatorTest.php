@@ -14,7 +14,7 @@ final class TypeValidatorTest extends TestCase
 {
     public function testBoolean(): void
     {
-        $validator = new TypeValidator(TypeValidator::BOOLEAN);
+        $validator = TypeValidator::boolean();
 
         self::assertTrue($validator->validate(true)->isValid());
 
@@ -28,7 +28,7 @@ final class TypeValidatorTest extends TestCase
 
     public function testCollection(): void
     {
-        $validator = new TypeValidator(TypeValidator::COLLECTION);
+        $validator = TypeValidator::collection();
 
         self::assertTrue($validator->validate([])->isValid());
         self::assertTrue($validator->validate([1])->isValid());
@@ -42,7 +42,7 @@ final class TypeValidatorTest extends TestCase
 
     public function testComposite(): void
     {
-        $validator = new TypeValidator(TypeValidator::COMPOSITE);
+        $validator = TypeValidator::composite();
 
         self::assertTrue($validator->validate([])->isValid());
         self::assertTrue($validator->validate(['fiz' => 1])->isValid());
@@ -56,7 +56,7 @@ final class TypeValidatorTest extends TestCase
 
     public function testInteger(): void
     {
-        $validator = new TypeValidator(TypeValidator::INTEGER);
+        $validator = TypeValidator::integer();
 
         self::assertTrue($validator->validate(1)->isValid());
 
@@ -70,7 +70,7 @@ final class TypeValidatorTest extends TestCase
 
     public function testNumber(): void
     {
-        $validator = new TypeValidator(TypeValidator::NUMBER);
+        $validator = TypeValidator::number();
 
         self::assertTrue($validator->validate(1)->isValid());
         self::assertTrue($validator->validate(1.2)->isValid());
@@ -84,7 +84,7 @@ final class TypeValidatorTest extends TestCase
 
     public function testString(): void
     {
-        $validator = new TypeValidator(TypeValidator::STRING);
+        $validator = TypeValidator::string();
 
         self::assertTrue($validator->validate('foo')->isValid());
 
