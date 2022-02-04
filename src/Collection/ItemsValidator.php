@@ -13,7 +13,7 @@ use LessValidator\Validator;
  */
 final class ItemsValidator implements Validator
 {
-    public function __construct(public Validator $itemValidator)
+    public function __construct(public readonly Validator $itemValidator)
     {
     }
 

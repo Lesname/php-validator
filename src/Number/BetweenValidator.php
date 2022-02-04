@@ -14,7 +14,7 @@ use LessValidator\Validator;
  */
 final class BetweenValidator implements Validator
 {
-    public function __construct(public float | int $minimal, public float | int $maximal)
+    public function __construct(public readonly float | int $minimal, public readonly float | int $maximal)
     {}
 
     public function validate(mixed $input): ValidateResult

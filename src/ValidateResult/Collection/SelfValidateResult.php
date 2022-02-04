@@ -10,7 +10,7 @@ use LessValidator\ValidateResult\ValidateResult;
  */
 final class SelfValidateResult implements ValidateResult
 {
-    public function __construct(public ValidateResult $self)
+    public function __construct(public readonly ValidateResult $self)
     {}
 
     public function isValid(): bool

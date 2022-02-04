@@ -13,7 +13,7 @@ final class ValidValidateResult implements ValidateResult
         return true;
     }
 
-    public function jsonSerialize()
+    public function jsonSerialize(): mixed
     {
         return null;
     }
