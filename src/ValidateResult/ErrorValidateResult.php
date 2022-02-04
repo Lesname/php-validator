@@ -12,8 +12,10 @@ final class ErrorValidateResult implements ValidateResult
      * @param string $code
      * @param array<mixed> $context
      */
-    public function __construct(public string $code, public array $context = [])
-    {}
+    public function __construct(
+        public readonly string $code,
+        public readonly array $context = [],
+    ) {}
 
     public function isValid(): bool
     {

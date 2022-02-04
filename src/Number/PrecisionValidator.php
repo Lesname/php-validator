@@ -14,7 +14,7 @@ use LessValidator\Validator;
  */
 final class PrecisionValidator implements Validator
 {
-    public function __construct(private int $precision)
+    public function __construct(private readonly int $precision)
     {
         assert($precision >= 1 && $precision <= 5, "Precision must be between 1 and 5, given {$precision}");
     }

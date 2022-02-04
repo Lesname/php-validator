@@ -10,6 +10,7 @@ use LessValidator\ValidateResult\ValidValidateResult;
 use LessValidator\Validator;
 use LessValueObject\String\Format\FormattedStringValueObject;
 use ReflectionClass;
+use ReflectionException;
 
 /**
  * @psalm-immutable
@@ -19,11 +20,11 @@ final class FormatValidator implements Validator
     /**
      * @param class-string<FormattedStringValueObject> $format
      */
-    public function __construct(public string $format)
+    public function __construct(public readonly string $format)
     {}
 
     /**
-     * @throws \ReflectionException
+     * @throws ReflectionException
      *
      * @psalm-suppress ImpureMethodCall getShortName
      */

@@ -14,7 +14,7 @@ use LessValidator\Validator;
  */
 final class SizeValidator implements Validator
 {
-    public function __construct(public int $minSize, public int $maxSize)
+    public function __construct(public readonly int $minSize, public readonly int $maxSize)
     {}
 
     public function validate(mixed $input): ValidateResult

@@ -20,7 +20,7 @@ final class TypeValidator implements Validator
     public const NUMBER = 'number';
     public const STRING = 'string';
 
-    public function __construct(public string $type)
+    public function __construct(public readonly string $type)
     {}
 
     /**
@@ -88,61 +88,13 @@ final class TypeValidator implements Validator
             : new ValidValidateResult();
     }
 
-    /**
-     * @psalm-suppress UnusedForeachValue for polyfill
-     *
-     * @todo php 8.1 use array_is_list
-     *
-     * @psalm-suppress MixedAssignment
-     */
     private function isCollection(mixed $input): bool
     {
-        if (!is_array($input)) {
-            return false;
-        }
-
-        if (count($input) === 0) {
-            return true;
-        }
-
-        $current_key = 0;
-        foreach ($input as $key => $noop) {
-            if ($key !== $current_key) {
-                return false;
-            }
-
-            ++$current_key;
-        }
-
-        return true;
+        return is_array($input) && array_is_list($input);
     }
 
-    /**
-     * @psalm-suppress UnusedForeachValue for polyfill
-     *
-     * @todo php 8.1 use array_is_list
-     *
-     * @psalm-suppress MixedAssignment
-     */
     private function isComposite(mixed $input): bool
     {
-        if (!is_array($input)) {
-            return false;
-        }
-
-        if (count($input) === 0) {
-            return true;
-        }
-
-        $current_key = 0;
-        foreach ($input as $key => $noop) {
-            if ($key !== $current_key) {
-                return true;
-            }
-
-            ++$current_key;
-        }
-
-        return false;
+        return is_array($input) && (count($input) === 0 || !array_is_list($input));
     }
 }

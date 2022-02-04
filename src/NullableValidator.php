@@ -11,7 +11,7 @@ use LessValidator\ValidateResult\ValidValidateResult;
  */
 final class NullableValidator implements Validator
 {
-    public function __construct(public Validator $subValidator)
+    public function __construct(public readonly Validator $subValidator)
     {}
 
     public function validate(mixed $input): ValidateResult

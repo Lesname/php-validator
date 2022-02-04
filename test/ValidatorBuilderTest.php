@@ -13,7 +13,8 @@ use LessDocumentor\Type\Document\Property\Range;
 use LessDocumentor\Type\Document\StringTypeDocument;
 use LessDocumentor\Type\Document\TypeDocument;
 use LessValidator\ValidatorBuilder;
-use LessValueObject\Number\Int\PositiveInt;
+use LessValueObject\Enum\ContentType;
+use LessValueObject\Number\Int\Unsigned;
 use LessValueObject\String\Format\EmailAddress;
 use PHPUnit\Framework\TestCase;
 use Throwable;
@@ -77,7 +78,10 @@ final class ValidatorBuilderTest extends TestCase
     public function testFromEnumDocument(): void
     {
         $doc = new EnumTypeDocument(
-            ['fiz', 'biz'],
+            [
+                ContentType::Text,
+                ContentType::Markdown,
+            ],
             null,
         );
 
@@ -85,8 +89,8 @@ final class ValidatorBuilderTest extends TestCase
             ->fromTypeDocument($doc)
             ->build();
 
-        self::assertTrue($validator->validate('fiz')->isValid());
-        self::assertTrue($validator->validate('biz')->isValid());
+        self::assertTrue($validator->validate('text')->isValid());
+        self::assertTrue($validator->validate('markdown')->isValid());
         self::assertFalse($validator->validate(null)->isValid());
         self::assertFalse($validator->validate('bar')->isValid());
     }
@@ -130,7 +134,7 @@ final class ValidatorBuilderTest extends TestCase
     {
         $doc = new NumberTypeDocument(
             new Range(-5, 5),
-            new PositiveInt(2),
+            new Unsigned(2),
             null,
             false,
         );
@@ -149,7 +153,7 @@ final class ValidatorBuilderTest extends TestCase
     {
         $doc = new NumberTypeDocument(
             new Range(1, 5),
-            new PositiveInt(0),
+            new Unsigned(0),
             null,
         );
 

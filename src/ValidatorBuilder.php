@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace LessValidator;
 
+use BackedEnum;
 use LessDocumentor\Type\Document\BoolTypeDocument;
 use LessDocumentor\Type\Document\CollectionTypeDocument;
 use LessDocumentor\Type\Document\CompositeTypeDocument;
@@ -67,7 +68,17 @@ final class ValidatorBuilder
             $typeDocument instanceof EnumTypeDocument => new ChainValidator(
                 [
                     TypeValidator::string(),
-                    new OptionsValidator($typeDocument->cases)
+                    new OptionsValidator(
+                        array_map(
+                            static function (BackedEnum $item): string {
+                                $value = $item->value;
+                                assert(is_string($value));
+
+                                return $value;
+                            },
+                            $typeDocument->cases,
+                        )
+                    ),
                 ],
             ),
             $typeDocument instanceof NumberTypeDocument => $this->buildFromNumberDocument($typeDocument),
