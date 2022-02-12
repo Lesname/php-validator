@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace LessValidator;
+namespace LessValidator\Builder;
 
 use BackedEnum;
 use LessDocumentor\Type\Document\BoolTypeDocument;
@@ -11,38 +11,25 @@ use LessDocumentor\Type\Document\EnumTypeDocument;
 use LessDocumentor\Type\Document\NumberTypeDocument;
 use LessDocumentor\Type\Document\StringTypeDocument;
 use LessDocumentor\Type\Document\TypeDocument;
+use LessValidator\ChainValidator;
 use LessValidator\Collection\ItemsValidator;
 use LessValidator\Collection\SizeValidator;
 use LessValidator\Composite\PropertyKeysValidator;
 use LessValidator\Composite\PropertyValuesValidator;
+use LessValidator\NullableValidator;
 use LessValidator\Number\BetweenValidator;
 use LessValidator\Number\PrecisionValidator;
 use LessValidator\String\FormatValidator;
 use LessValidator\String\LengthValidator;
 use LessValidator\String\OptionsValidator;
+use LessValidator\TypeValidator;
+use LessValidator\Validator;
 use LessValueObject\String\Format\FormattedStringValueObject;
 use RuntimeException;
 
-final class ValidatorBuilder
+final class GenericValidatorBuilder implements RouteDocumentValidatorBuilder
 {
-    private ?TypeDocument $typeDocument = null;
-
-    public function fromTypeDocument(TypeDocument $typeDocument): self
-    {
-        $this->typeDocument = $typeDocument;
-
-        return $this;
-    }
-
-    public function build(): Validator
-    {
-        return match (true) {
-            $this->typeDocument instanceof TypeDocument => $this->buildFromTypeDocument($this->typeDocument),
-            default => throw new RuntimeException(),
-        };
-    }
-
-    private function buildFromTypeDocument(TypeDocument $typeDocument): Validator
+    public function fromTypeDocument(TypeDocument $typeDocument): Validator
     {
         $validator = match (true) {
             $typeDocument instanceof BoolTypeDocument => TypeValidator::boolean(),
@@ -50,7 +37,7 @@ final class ValidatorBuilder
                 [
                     TypeValidator::collection(),
                     new SizeValidator($typeDocument->length->minimal, $typeDocument->length->maximal),
-                    new ItemsValidator($this->buildFromTypeDocument($typeDocument->item)),
+                    new ItemsValidator($this->fromTypeDocument($typeDocument->item)),
                 ],
             ),
             $typeDocument instanceof CompositeTypeDocument => new ChainValidator(
@@ -59,7 +46,7 @@ final class ValidatorBuilder
                     new PropertyKeysValidator(array_keys($typeDocument->properties)),
                     new PropertyValuesValidator(
                         array_map(
-                            fn (TypeDocument $doc): Validator => $this->buildFromTypeDocument($doc),
+                            fn (TypeDocument $doc): Validator => $this->fromTypeDocument($doc),
                             $typeDocument->properties,
                         ),
                     ),
