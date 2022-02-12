@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace LessValidatorTest;
+namespace LessValidatorTest\Builder;
 
 use LessDocumentor\Type\Document\BoolTypeDocument;
 use LessDocumentor\Type\Document\CollectionTypeDocument;
@@ -12,7 +12,7 @@ use LessDocumentor\Type\Document\Property\Length;
 use LessDocumentor\Type\Document\Property\Range;
 use LessDocumentor\Type\Document\StringTypeDocument;
 use LessDocumentor\Type\Document\TypeDocument;
-use LessValidator\ValidatorBuilder;
+use LessValidator\Builder\GenericValidatorBuilder;
 use LessValueObject\Enum\ContentType;
 use LessValueObject\Number\Int\Unsigned;
 use LessValueObject\String\Format\EmailAddress;
@@ -20,18 +20,17 @@ use PHPUnit\Framework\TestCase;
 use Throwable;
 
 /**
- * @covers \LessValidator\ValidatorBuilder
+ * @covers \LessValidator\Builder\GenericValidatorBuilder
  */
-final class ValidatorBuilderTest extends TestCase
+final class GenericValidatorBuilderTest extends TestCase
 {
     public function testFromBoolDocument(): void
     {
         $doc = new BoolTypeDocument(null);
 
 
-        $validator = (new ValidatorBuilder())
-            ->fromTypeDocument($doc)
-            ->build();
+        $validator = (new GenericValidatorBuilder())
+            ->fromTypeDocument($doc);
 
         self::assertTrue($validator->validate(true)->isValid());
         self::assertTrue($validator->validate(false)->isValid());
@@ -46,9 +45,8 @@ final class ValidatorBuilderTest extends TestCase
             null,
         );
 
-        $validator = (new ValidatorBuilder())
-            ->fromTypeDocument($doc)
-            ->build();
+        $validator = (new GenericValidatorBuilder())
+            ->fromTypeDocument($doc);
 
         self::assertTrue($validator->validate([true])->isValid());
         self::assertTrue($validator->validate([true, false])->isValid());
@@ -64,9 +62,8 @@ final class ValidatorBuilderTest extends TestCase
             null,
         );
 
-        $validator = (new ValidatorBuilder())
-            ->fromTypeDocument($doc)
-            ->build();
+        $validator = (new GenericValidatorBuilder())
+            ->fromTypeDocument($doc);
 
         self::assertTrue($validator->validate(['foo' => true])->isValid());
         self::assertFalse($validator->validate(null)->isValid());
@@ -85,9 +82,8 @@ final class ValidatorBuilderTest extends TestCase
             null,
         );
 
-        $validator = (new ValidatorBuilder())
-            ->fromTypeDocument($doc)
-            ->build();
+        $validator = (new GenericValidatorBuilder())
+            ->fromTypeDocument($doc);
 
         self::assertTrue($validator->validate('text')->isValid());
         self::assertTrue($validator->validate('markdown')->isValid());
@@ -102,9 +98,8 @@ final class ValidatorBuilderTest extends TestCase
             null,
         );
 
-        $validator = (new ValidatorBuilder())
-            ->fromTypeDocument($doc)
-            ->build();
+        $validator = (new GenericValidatorBuilder())
+            ->fromTypeDocument($doc);
 
         self::assertTrue($validator->validate('a')->isValid());
         self::assertTrue($validator->validate('ab')->isValid());
@@ -121,9 +116,8 @@ final class ValidatorBuilderTest extends TestCase
             EmailAddress::class,
         );
 
-        $validator = (new ValidatorBuilder())
-            ->fromTypeDocument($doc)
-            ->build();
+        $validator = (new GenericValidatorBuilder())
+            ->fromTypeDocument($doc);
 
         self::assertTrue($validator->validate('a@b.c')->isValid());
         self::assertFalse($validator->validate(null)->isValid());
@@ -139,9 +133,8 @@ final class ValidatorBuilderTest extends TestCase
             false,
         );
 
-        $validator = (new ValidatorBuilder())
-            ->fromTypeDocument($doc)
-            ->build();
+        $validator = (new GenericValidatorBuilder())
+            ->fromTypeDocument($doc);
 
         self::assertTrue($validator->validate(-4.12)->isValid());
         self::assertTrue($validator->validate(5)->isValid());
@@ -157,9 +150,8 @@ final class ValidatorBuilderTest extends TestCase
             null,
         );
 
-        $validator = (new ValidatorBuilder())
-            ->fromTypeDocument($doc)
-            ->build();
+        $validator = (new GenericValidatorBuilder())
+            ->fromTypeDocument($doc);
 
         self::assertTrue($validator->validate(1)->isValid());
         self::assertTrue($validator->validate(5)->isValid());
@@ -174,8 +166,7 @@ final class ValidatorBuilderTest extends TestCase
 
         $doc = $this->createMock(TypeDocument::class);
 
-        (new ValidatorBuilder())
-            ->fromTypeDocument($doc)
-            ->build();
+        (new GenericValidatorBuilder())
+            ->fromTypeDocument($doc);
     }
 }
