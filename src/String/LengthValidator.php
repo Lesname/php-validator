@@ -23,7 +23,7 @@ final class LengthValidator implements Validator
     {
         assert(is_string($input), new UnexpectedType('string', get_debug_type($input)));
 
-        $length = mb_strlen($input);
+        $length = grapheme_strlen($input);
         $context = [
             'givenLength' => $length,
             'minLength' => $this->minLength,

@@ -15,14 +15,20 @@ final class LengthValidatorTest extends TestCase
     {
         $validator = new LengthValidator(3, 5);
 
-        self::assertFalse($validator->validate('fö')->isValid());
+        $result = $validator->validate('🏴󠁧󠁢󠁥󠁮󠁧󠁿ö');
+
+        self::assertFalse($result->isValid());
+        self::assertSame('string.length.tooShort', $result->code);
     }
 
     public function testTooLong(): void
     {
         $validator = new LengthValidator(1, 2);
 
-        self::assertFalse($validator->validate('föo')->isValid());
+        $result = $validator->validate('föo');
+
+        self::assertFalse($result->isValid());
+        self::assertSame('string.length.tooLong', $result->code);
     }
 
     public function testValid(): void

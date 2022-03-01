@@ -12,7 +12,7 @@
     "php": "^8.1.0",
 
     "ext-json": "*",
-    "ext-mbstring": "*",
+    "ext-intl": "*",
 
     "lessname/documentor": "^0.1.3"
   },
