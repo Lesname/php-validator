@@ -27,7 +27,7 @@ use LessValidator\Validator;
 use LessValueObject\String\Format\FormattedStringValueObject;
 use RuntimeException;
 
-final class GenericValidatorBuilder implements RouteDocumentValidatorBuilder
+final class GenericValidatorBuilder implements TypeDocumentValidatorBuilder
 {
     public function fromTypeDocument(TypeDocument $typeDocument): Validator
     {
