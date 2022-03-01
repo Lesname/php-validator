@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace LessValidator\ValidateResult;
 
+use stdClass;
+
 /**
  * @psalm-immutable
  */
@@ -29,7 +31,9 @@ final class ErrorValidateResult implements ValidateResult
     {
         return [
             'code' => $this->code,
-            'context' => $this->context,
+            'context' => $this->context === []
+                ? new stdClass()
+                : $this->context,
         ];
     }
 }
