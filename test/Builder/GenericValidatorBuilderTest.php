@@ -26,7 +26,7 @@ final class GenericValidatorBuilderTest extends TestCase
 {
     public function testFromBoolDocument(): void
     {
-        $doc = new BoolTypeDocument(null);
+        $doc = new BoolTypeDocument();
 
 
         $validator = (new GenericValidatorBuilder())
@@ -130,8 +130,8 @@ final class GenericValidatorBuilderTest extends TestCase
             new Range(-5, 5),
             new Unsigned(2),
             null,
-            false,
         );
+        $doc = $doc->withNullable();
 
         $validator = (new GenericValidatorBuilder())
             ->fromTypeDocument($doc);
