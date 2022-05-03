@@ -73,7 +73,7 @@ final class GenericValidatorBuilder implements TypeDocumentValidatorBuilder
             default => throw new RuntimeException(),
         };
 
-        return !$typeDocument->isRequired()
+        return $typeDocument->isNullable()
             ? new NullableValidator($validator)
             : $validator;
     }
