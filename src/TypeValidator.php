@@ -83,9 +83,15 @@ final class TypeValidator implements Validator
             default => throw new RuntimeException(),
         };
 
-        return !$valid
-            ? new ErrorValidateResult("type.expected.{$this->type}")
-            : new ValidValidateResult();
+        if ($valid === false) {
+            if ($input === null) {
+                return new ErrorValidateResult('type.required');
+            }
+
+            return new ErrorValidateResult("type.expected.{$this->type}");
+        }
+
+        return new ValidValidateResult();
     }
 
     private function isCollection(mixed $input): bool
