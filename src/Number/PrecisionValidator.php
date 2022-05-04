@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace LessValidator\Number;
 
-use LessValidator\Exception\UnexpectedType;
 use LessValidator\ValidateResult\ErrorValidateResult;
 use LessValidator\ValidateResult\ValidateResult;
 use LessValidator\ValidateResult\ValidValidateResult;
@@ -21,7 +20,7 @@ final class PrecisionValidator implements Validator
 
     public function validate(mixed $input): ValidateResult
     {
-        assert(is_float($input) || is_int($input), new UnexpectedType('number', get_debug_type($input)));
+        assert(is_float($input) || is_int($input));
 
         if (is_float($input) && preg_match('/\.(\d*)$/', (string)$input, $matches)) {
             if (strlen($matches[1]) > $this->precision) {

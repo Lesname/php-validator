@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace LessValidator\String;
 
-use LessValidator\Exception\UnexpectedType;
 use LessValidator\ValidateResult\ErrorValidateResult;
 use LessValidator\ValidateResult\ValidateResult;
 use LessValidator\ValidateResult\ValidValidateResult;
@@ -30,7 +29,7 @@ final class FormatValidator implements Validator
      */
     public function validate(mixed $input): ValidateResult
     {
-        assert(is_string($input), new UnexpectedType('string', get_debug_type($input)));
+        assert(is_string($input));
 
         if (!$this->format::isFormat($input)) {
             $name = lcfirst((new ReflectionClass($this->format))->getShortName());
