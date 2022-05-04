@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace LessValidator\Number;
 
-use LessValidator\Exception\UnexpectedType;
 use LessValidator\ValidateResult\ErrorValidateResult;
 use LessValidator\ValidateResult\ValidateResult;
 use LessValidator\ValidateResult\ValidValidateResult;
@@ -19,7 +18,7 @@ final class BetweenValidator implements Validator
 
     public function validate(mixed $input): ValidateResult
     {
-        assert(is_float($input) || is_int($input), new UnexpectedType('number', get_debug_type($input)));
+        assert(is_float($input) || is_int($input));
 
         if ($input < $this->minimal) {
             return new ErrorValidateResult(

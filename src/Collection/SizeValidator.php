@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace LessValidator\Collection;
 
-use LessValidator\Exception\UnexpectedType;
 use LessValidator\ValidateResult\ErrorValidateResult;
 use LessValidator\ValidateResult\ValidateResult;
 use LessValidator\ValidateResult\ValidValidateResult;
@@ -19,7 +18,7 @@ final class SizeValidator implements Validator
 
     public function validate(mixed $input): ValidateResult
     {
-        assert(is_array($input), new UnexpectedType('array', get_debug_type($input)));
+        assert(is_array($input));
 
         $size = count($input);
 

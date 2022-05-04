@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace LessValidator\Collection;
 
-use LessValidator\Exception\UnexpectedType;
 use LessValidator\ValidateResult\Collection\ItemsValidateResult;
 use LessValidator\ValidateResult\ValidateResult;
 use LessValidator\Validator;
@@ -19,7 +18,7 @@ final class ItemsValidator implements Validator
 
     public function validate(mixed $input): ValidateResult
     {
-        assert(is_array($input), new UnexpectedType('array', get_debug_type($input)));
+        assert(is_array($input));
         /** @var array<int, mixed> $input */
 
         $itemValidator = $this->itemValidator;

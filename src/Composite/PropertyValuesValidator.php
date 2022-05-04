@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace LessValidator\Composite;
 
-use LessValidator\Exception\UnexpectedType;
 use LessValidator\ValidateResult\Composite\PropertiesValidateResult;
 use LessValidator\ValidateResult\ValidateResult;
 use LessValidator\Validator;
@@ -26,7 +25,7 @@ final class PropertyValuesValidator implements Validator
 
     public function validate(mixed $input): ValidateResult
     {
-        assert(is_array($input), new UnexpectedType('array', get_debug_type($input)));
+        assert(is_array($input));
 
         $proprtyValueValidators = $this->proprtyValueValidators;
 
