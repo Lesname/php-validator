@@ -59,7 +59,7 @@ final class GenericValidatorBuilderTest extends TestCase
     {
         $doc = new CompositeTypeDocument(
             ['foo' => new BoolTypeDocument(null)],
-            null,
+            ['foo'],
         );
 
         $validator = (new GenericValidatorBuilder())
