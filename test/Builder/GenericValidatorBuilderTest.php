@@ -72,6 +72,25 @@ final class GenericValidatorBuilderTest extends TestCase
         self::assertFalse($validator->validate(['foo' => 1])->isValid());
     }
 
+    public function testFromCompositeDocumentAllowAdditionalProperties(): void
+    {
+        $doc = new CompositeTypeDocument(
+            ['foo' => new BoolTypeDocument(null)],
+            ['foo'],
+            true,
+        );
+
+        $validator = (new GenericValidatorBuilder())
+            ->fromTypeDocument($doc);
+
+        self::assertTrue($validator->validate(['foo' => true])->isValid());
+        self::assertTrue($validator->validate(['foo' => false, 'bar' => false])->isValid());
+
+        self::assertFalse($validator->validate(null)->isValid());
+        self::assertFalse($validator->validate([])->isValid());
+        self::assertFalse($validator->validate(['foo' => 1])->isValid());
+    }
+
     public function testFromEnumDocument(): void
     {
         $doc = new EnumTypeDocument(
