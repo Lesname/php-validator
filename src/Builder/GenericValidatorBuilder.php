@@ -40,18 +40,7 @@ final class GenericValidatorBuilder implements TypeDocumentValidatorBuilder
                     new ItemsValidator($this->fromTypeDocument($typeDocument->item)),
                 ],
             ),
-            $typeDocument instanceof CompositeTypeDocument => new ChainValidator(
-                [
-                    TypeValidator::composite(),
-                    new PropertyKeysValidator(array_keys($typeDocument->properties)),
-                    new PropertyValuesValidator(
-                        array_map(
-                            fn (TypeDocument $doc): Validator => $this->fromTypeDocument($doc),
-                            $typeDocument->properties,
-                        ),
-                    ),
-                ],
-            ),
+            $typeDocument instanceof CompositeTypeDocument => $this->buildFromCompositeDocument($typeDocument),
             $typeDocument instanceof EnumTypeDocument => new ChainValidator(
                 [
                     TypeValidator::string(),
@@ -76,6 +65,27 @@ final class GenericValidatorBuilder implements TypeDocumentValidatorBuilder
         return $typeDocument->isNullable()
             ? new NullableValidator($validator)
             : $validator;
+    }
+
+    private function buildFromCompositeDocument(CompositeTypeDocument $typeDocument): Validator
+    {
+        $validators = [TypeValidator::composite()];
+
+        if ($typeDocument->allowAdditionalProperties === false) {
+            $validators[] = new PropertyKeysValidator(array_keys($typeDocument->properties));
+        }
+
+        return new ChainValidator(
+            [
+                ...$validators,
+                new PropertyValuesValidator(
+                    array_map(
+                        fn (TypeDocument $doc): Validator => $this->fromTypeDocument($doc),
+                        $typeDocument->properties,
+                    ),
+                ),
+            ],
+        );
     }
 
     private function buildFromStringDocument(StringTypeDocument $typeDocument): Validator
