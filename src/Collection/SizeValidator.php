@@ -13,7 +13,7 @@ use LessValidator\Validator;
  */
 final class SizeValidator implements Validator
 {
-    public function __construct(public readonly int $minSize, public readonly int $maxSize)
+    public function __construct(public readonly ?int $minSize, public readonly ?int $maxSize)
     {}
 
     public function validate(mixed $input): ValidateResult
@@ -22,11 +22,11 @@ final class SizeValidator implements Validator
 
         $size = count($input);
 
-        if ($size < $this->minSize) {
+        if ($this->minSize !== null && $size < $this->minSize) {
             return new ErrorValidateResult('collection.size.tooSmall', ['counted' => $size, 'min' => $this->minSize]);
         }
 
-        if ($size > $this->maxSize) {
+        if ($this->maxSize !== null && $size > $this->maxSize) {
             return new ErrorValidateResult('collection.size.tooLarge', ['counted' => $size, 'max' => $this->maxSize]);
         }
 

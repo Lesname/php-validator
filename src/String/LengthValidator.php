@@ -14,8 +14,8 @@ use LessValidator\Validator;
 final class LengthValidator implements Validator
 {
     public function __construct(
-        public readonly int $minLength,
-        public readonly int $maxLength,
+        public readonly ?int $minLength,
+        public readonly ?int $maxLength,
     ) {}
 
     public function validate(mixed $input): ValidateResult
@@ -29,11 +29,11 @@ final class LengthValidator implements Validator
             'maxLength' => $this->maxLength,
         ];
 
-        if ($length < $this->minLength) {
+        if ($this->minLength !== null && $length < $this->minLength) {
             return new ErrorValidateResult('string.length.tooShort', $context);
         }
 
-        if ($length > $this->maxLength) {
+        if ($this->maxLength !== null && $length > $this->maxLength) {
             return new ErrorValidateResult('string.length.tooLong', $context);
         }
 
