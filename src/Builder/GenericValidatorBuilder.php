@@ -6,6 +6,7 @@ namespace LessValidator\Builder;
 use BackedEnum;
 use LessDocumentor\Type\Document\BoolTypeDocument;
 use LessDocumentor\Type\Document\CollectionTypeDocument;
+use LessDocumentor\Type\Document\Composite\Property;
 use LessDocumentor\Type\Document\CompositeTypeDocument;
 use LessDocumentor\Type\Document\EnumTypeDocument;
 use LessDocumentor\Type\Document\NumberTypeDocument;
@@ -36,7 +37,7 @@ final class GenericValidatorBuilder implements TypeDocumentValidatorBuilder
             $typeDocument instanceof CollectionTypeDocument => new ChainValidator(
                 [
                     TypeValidator::collection(),
-                    new SizeValidator($typeDocument->length->minimal, $typeDocument->length->maximal),
+                    new SizeValidator($typeDocument->size->minimal, $typeDocument->size->maximal),
                     new ItemsValidator($this->fromTypeDocument($typeDocument->item)),
                 ],
             ),
@@ -46,7 +47,11 @@ final class GenericValidatorBuilder implements TypeDocumentValidatorBuilder
                     TypeValidator::string(),
                     new OptionsValidator(
                         array_map(
-                            static function (BackedEnum $item): string {
+                            static function (BackedEnum | string $item): string {
+                                if (is_string($item)) {
+                                    return $item;
+                                }
+
                                 $value = $item->value;
                                 assert(is_string($value));
 
@@ -71,7 +76,7 @@ final class GenericValidatorBuilder implements TypeDocumentValidatorBuilder
     {
         $validators = [TypeValidator::composite()];
 
-        if ($typeDocument->allowAdditionalProperties === false) {
+        if ($typeDocument->allowExtraProperties === false) {
             $validators[] = new PropertyKeysValidator(array_keys($typeDocument->properties));
         }
 
@@ -80,7 +85,7 @@ final class GenericValidatorBuilder implements TypeDocumentValidatorBuilder
                 ...$validators,
                 new PropertyValuesValidator(
                     array_map(
-                        fn (TypeDocument $doc): Validator => $this->fromTypeDocument($doc),
+                        fn (Property $doc): Validator => $this->fromTypeDocument($doc->type),
                         $typeDocument->properties,
                     ),
                 ),
@@ -106,21 +111,23 @@ final class GenericValidatorBuilder implements TypeDocumentValidatorBuilder
 
     private function buildFromNumberDocument(NumberTypeDocument $typeDocument): Validator
     {
-        if ($typeDocument->precision->isSame(0)) {
-            return new ChainValidator(
-                [
-                    TypeValidator::integer(),
-                    new BetweenValidator($typeDocument->range->minimal, $typeDocument->range->maximal),
-                ],
+        if ($typeDocument->precision === 0) {
+            $validators = [TypeValidator::integer()];
+        } else {
+            $validators = [TypeValidator::number()];
+        }
+
+        if ($typeDocument->precision > 0) {
+            $validators[] = new PrecisionValidator($typeDocument->precision);
+        }
+
+        if ($typeDocument->range->minimal !== null || $typeDocument->range->maximal !== null) {
+            $validators[] = new BetweenValidator(
+                $typeDocument->range->minimal,
+                $typeDocument->range->maximal,
             );
         }
 
-        return new ChainValidator(
-            [
-                TypeValidator::number(),
-                new BetweenValidator($typeDocument->range->minimal, $typeDocument->range->maximal),
-                new PrecisionValidator($typeDocument->precision->getValue()),
-            ],
-        );
+        return new ChainValidator($validators);
     }
 }

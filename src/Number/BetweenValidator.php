@@ -13,21 +13,21 @@ use LessValidator\Validator;
  */
 final class BetweenValidator implements Validator
 {
-    public function __construct(public readonly float | int $minimal, public readonly float | int $maximal)
+    public function __construct(public readonly float | int | null $minimal, public readonly float | int | null $maximal)
     {}
 
     public function validate(mixed $input): ValidateResult
     {
         assert(is_float($input) || is_int($input));
 
-        if ($input < $this->minimal) {
+        if ($this->minimal !== null && $input < $this->minimal) {
             return new ErrorValidateResult(
                 'number.between.tooLittle',
                 ['minimal' => $this->minimal],
             );
         }
 
-        if ($input > $this->maximal) {
+        if ($this->maximal !== null && $input > $this->maximal) {
             return new ErrorValidateResult(
                 'number.between.tooGreat',
                 ['maximal' => $this->maximal],

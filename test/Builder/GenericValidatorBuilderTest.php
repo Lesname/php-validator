@@ -4,12 +4,14 @@ declare(strict_types=1);
 namespace LessValidatorTest\Builder;
 
 use LessDocumentor\Type\Document\BoolTypeDocument;
+use LessDocumentor\Type\Document\Collection\Size;
 use LessDocumentor\Type\Document\CollectionTypeDocument;
+use LessDocumentor\Type\Document\Composite\Property;
 use LessDocumentor\Type\Document\CompositeTypeDocument;
 use LessDocumentor\Type\Document\EnumTypeDocument;
+use LessDocumentor\Type\Document\Number\Range;
 use LessDocumentor\Type\Document\NumberTypeDocument;
-use LessDocumentor\Type\Document\Property\Length;
-use LessDocumentor\Type\Document\Property\Range;
+use LessDocumentor\Type\Document\String\Length;
 use LessDocumentor\Type\Document\StringTypeDocument;
 use LessDocumentor\Type\Document\TypeDocument;
 use LessValidator\Builder\GenericValidatorBuilder;
@@ -41,7 +43,7 @@ final class GenericValidatorBuilderTest extends TestCase
     {
         $doc = new CollectionTypeDocument(
             new BoolTypeDocument(null),
-            new Length(1, 2),
+            new Size(1, 2),
             null,
         );
 
@@ -58,8 +60,11 @@ final class GenericValidatorBuilderTest extends TestCase
     public function testFromCompositeDocument(): void
     {
         $doc = new CompositeTypeDocument(
-            ['foo' => new BoolTypeDocument(null)],
-            ['foo'],
+            [
+                'foo' => new Property(
+                    new BoolTypeDocument(null),
+                ),
+            ],
         );
 
         $validator = (new GenericValidatorBuilder())
@@ -75,8 +80,11 @@ final class GenericValidatorBuilderTest extends TestCase
     public function testFromCompositeDocumentAllowAdditionalProperties(): void
     {
         $doc = new CompositeTypeDocument(
-            ['foo' => new BoolTypeDocument(null)],
-            ['foo'],
+            [
+                'foo' => new Property(
+                    new BoolTypeDocument(null),
+                ),
+            ],
             true,
         );
 
@@ -147,8 +155,7 @@ final class GenericValidatorBuilderTest extends TestCase
     {
         $doc = new NumberTypeDocument(
             new Range(-5, 5),
-            new Unsigned(2),
-            null,
+            2,
         );
         $doc = $doc->withNullable();
 
@@ -165,7 +172,7 @@ final class GenericValidatorBuilderTest extends TestCase
     {
         $doc = new NumberTypeDocument(
             new Range(1, 5),
-            new Unsigned(0),
+            0,
             null,
         );
 
