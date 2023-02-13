@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace LessValidator\Builder;
 
-use BackedEnum;
 use LessDocumentor\Type\Document\BoolTypeDocument;
 use LessDocumentor\Type\Document\CollectionTypeDocument;
 use LessDocumentor\Type\Document\Composite\Property;
@@ -46,19 +45,7 @@ final class GenericValidatorBuilder implements TypeDocumentValidatorBuilder
                 [
                     TypeValidator::string(),
                     new OptionsValidator(
-                        array_map(
-                            static function (BackedEnum | string $item): string {
-                                if (is_string($item)) {
-                                    return $item;
-                                }
-
-                                $value = $item->value;
-                                assert(is_string($value));
-
-                                return $value;
-                            },
-                            $typeDocument->cases,
-                        )
+                        $typeDocument->cases,
                     ),
                 ],
             ),
