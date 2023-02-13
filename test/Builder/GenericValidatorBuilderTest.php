@@ -103,8 +103,8 @@ final class GenericValidatorBuilderTest extends TestCase
     {
         $doc = new EnumTypeDocument(
             [
-                ContentType::Text,
-                ContentType::Markdown,
+                ContentType::Text->getValue(),
+                ContentType::Markdown->getValue(),
             ],
             null,
         );
