@@ -25,7 +25,7 @@ final class PrecisionValidator implements Validator
         if (is_float($input) && preg_match('/\.(\d*)$/', (string)$input, $matches)) {
             if (strlen($matches[1]) > $this->precision) {
                 return new ErrorValidateResult(
-                    'number.precision',
+                    'validation.number.precision',
                     ['max' => $this->precision],
                 );
             }

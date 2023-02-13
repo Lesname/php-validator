@@ -18,7 +18,7 @@ final class LengthValidatorTest extends TestCase
         $result = $validator->validate('🏴󠁧󠁢󠁥󠁮󠁧󠁿ö');
 
         self::assertFalse($result->isValid());
-        self::assertSame('string.length.tooShort', $result->code);
+        self::assertSame('validation.string.tooShort', $result->code);
     }
 
     public function testTooLong(): void
@@ -28,7 +28,7 @@ final class LengthValidatorTest extends TestCase
         $result = $validator->validate('föo');
 
         self::assertFalse($result->isValid());
-        self::assertSame('string.length.tooLong', $result->code);
+        self::assertSame('validation.string.tooLong', $result->code);
     }
 
     public function testValid(): void

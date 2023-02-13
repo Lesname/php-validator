@@ -21,15 +21,35 @@ final class BetweenValidator implements Validator
         assert(is_float($input) || is_int($input));
 
         if ($this->minimal !== null && $input < $this->minimal) {
+            if ($this->maximal) {
+                return new ErrorValidateResult(
+                    'validation.number.between',
+                    [
+                        'minimal' => $this->minimal,
+                        'maximal' => $this->maximal,
+                    ],
+                );
+            }
+
             return new ErrorValidateResult(
-                'number.between.tooLittle',
+                'validation.number.tooLittle',
                 ['minimal' => $this->minimal],
             );
         }
 
         if ($this->maximal !== null && $input > $this->maximal) {
+            if ($this->minimal) {
+                return new ErrorValidateResult(
+                    'validation.number.between',
+                    [
+                        'minimal' => $this->minimal,
+                        'maximal' => $this->maximal,
+                    ],
+                );
+            }
+
             return new ErrorValidateResult(
-                'number.between.tooGreat',
+                'validation.number.tooGreat',
                 ['maximal' => $this->maximal],
             );
         }
