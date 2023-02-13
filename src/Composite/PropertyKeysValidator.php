@@ -7,6 +7,7 @@ use LessValidator\ValidateResult\ErrorValidateResult;
 use LessValidator\ValidateResult\ValidateResult;
 use LessValidator\ValidateResult\ValidValidateResult;
 use LessValidator\Validator;
+use LessValidator\ValidateResult\Composite\SelfValidateResult;
 
 /**
  * @psalm-immutable
@@ -31,9 +32,11 @@ final class PropertyKeysValidator implements Validator
         $diff = array_diff(array_keys($input), $this->keys);
 
         if (count($diff) > 0) {
-            return new ErrorValidateResult(
-                'composite.keys.notAllowed',
-                ['extra' => array_values($diff)],
+            return new SelfValidateResult(
+                new ErrorValidateResult(
+                    'validation.composite.keysNotAllowed',
+                    ['extra' => array_values($diff)],
+                ),
             );
         }
 

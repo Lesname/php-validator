@@ -140,7 +140,7 @@ final class GenericValidatorBuilderTest extends TestCase
     {
         $doc = new StringTypeDocument(
             new Length(1, 255),
-            EmailAddress::class,
+            reference: EmailAddress::class,
         );
 
         $validator = (new GenericValidatorBuilder())

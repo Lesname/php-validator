@@ -30,11 +30,15 @@ final class LengthValidator implements Validator
         ];
 
         if ($this->minLength !== null && $length < $this->minLength) {
-            return new ErrorValidateResult('string.length.tooShort', $context);
+            if ($length === 0) {
+                return new ErrorValidateResult('validation.string.required');
+            }
+
+            return new ErrorValidateResult('validation.string.tooShort', $context);
         }
 
         if ($this->maxLength !== null && $length > $this->maxLength) {
-            return new ErrorValidateResult('string.length.tooLong', $context);
+            return new ErrorValidateResult('validation.string.tooLong', $context);
         }
 
         return new ValidValidateResult();

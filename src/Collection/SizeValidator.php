@@ -25,13 +25,13 @@ final class SizeValidator implements Validator
 
         if ($this->minSize !== null && $size < $this->minSize) {
             return new SelfValidateResult(
-                new ErrorValidateResult('collection.size.tooSmall', ['counted' => $size, 'min' => $this->minSize])
+                new ErrorValidateResult('validation.collection.tooFew', ['counted' => $size, 'min' => $this->minSize])
             );
         }
 
         if ($this->maxSize !== null && $size > $this->maxSize) {
             return new SelfValidateResult(
-                new ErrorValidateResult('collection.size.tooLarge', ['counted' => $size, 'max' => $this->maxSize]),
+                new ErrorValidateResult('validation.collection.tooMany', ['counted' => $size, 'max' => $this->maxSize]),
             );
         }
 
