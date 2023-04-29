@@ -12,7 +12,7 @@ final class ErrorValidateResult implements ValidateResult
 {
     /**
      * @param string $code
-     * @param array<mixed> $context
+     * @param array<string, string | integer | float | array<string | integer | float | null> | null> $context
      */
     public function __construct(
         public readonly string $code,
