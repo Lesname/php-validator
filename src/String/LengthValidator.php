@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace LessValidator\String;
 
+use RuntimeException;
 use LessValidator\ValidateResult\ErrorValidateResult;
 use LessValidator\ValidateResult\ValidateResult;
 use LessValidator\ValidateResult\ValidValidateResult;
@@ -23,6 +24,11 @@ final class LengthValidator implements Validator
         assert(is_string($input));
 
         $length = grapheme_strlen($input);
+
+        if ($length === false) {
+            throw new RuntimeException();
+        }
+
         $context = [
             'givenLength' => $length,
             'minLength' => $this->minLength,
