@@ -10,6 +10,6 @@ final class TranslationHelper
 
     public static function getTranslationDirectory(): string
     {
-        return __DIR__ . '/../../resource/translation';
+        return __DIR__ . '/../resource/translation';
     }
 }
