@@ -33,13 +33,7 @@ final class GenericValidatorBuilder implements TypeDocumentValidatorBuilder
     {
         $validator = match (true) {
             $typeDocument instanceof BoolTypeDocument => TypeValidator::boolean(),
-            $typeDocument instanceof CollectionTypeDocument => new ChainValidator(
-                [
-                    TypeValidator::collection(),
-                    new SizeValidator($typeDocument->size->minimal, $typeDocument->size->maximal),
-                    new ItemsValidator($this->fromTypeDocument($typeDocument->item)),
-                ],
-            ),
+            $typeDocument instanceof CollectionTypeDocument => $this->buildFromCollectionDocument($typeDocument),
             $typeDocument instanceof CompositeTypeDocument => $this->buildFromCompositeDocument($typeDocument),
             $typeDocument instanceof EnumTypeDocument => new ChainValidator(
                 [
@@ -57,6 +51,19 @@ final class GenericValidatorBuilder implements TypeDocumentValidatorBuilder
         return $typeDocument->isNullable()
             ? new NullableValidator($validator)
             : $validator;
+    }
+
+    private function buildFromCollectionDocument(CollectionTypeDocument $typeDocument): Validator
+    {
+        $chained = [TypeValidator::collection()];
+
+        if ($typeDocument->size) {
+            $chained[] = new SizeValidator($typeDocument->size->minimal, $typeDocument->size->maximal);
+        }
+
+        $chained[] = new ItemsValidator($this->fromTypeDocument($typeDocument->item));
+
+        return new ChainValidator($chained);
     }
 
     private function buildFromCompositeDocument(CompositeTypeDocument $typeDocument): Validator
@@ -82,10 +89,11 @@ final class GenericValidatorBuilder implements TypeDocumentValidatorBuilder
 
     private function buildFromStringDocument(StringTypeDocument $typeDocument): Validator
     {
-        $validators = [
-            TypeValidator::string(),
-            new LengthValidator($typeDocument->length->minimal, $typeDocument->length->maximal),
-        ];
+        $validators = [TypeValidator::string()];
+
+        if ($typeDocument->length) {
+            $validators[] = new LengthValidator($typeDocument->length->minimal, $typeDocument->length->maximal);
+        }
 
         $reference = $typeDocument->getReference();
 
@@ -108,7 +116,7 @@ final class GenericValidatorBuilder implements TypeDocumentValidatorBuilder
             $validators[] = new PrecisionValidator($typeDocument->precision);
         }
 
-        if ($typeDocument->range->minimal !== null || $typeDocument->range->maximal !== null) {
+        if ($typeDocument->range !== null) {
             $validators[] = new BetweenValidator(
                 $typeDocument->range->minimal,
                 $typeDocument->range->maximal,
