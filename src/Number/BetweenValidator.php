@@ -23,7 +23,7 @@ final class BetweenValidator implements Validator
         if ($this->minimal !== null && $input < $this->minimal) {
             if ($this->maximal) {
                 return new ErrorValidateResult(
-                    'validation.number.between',
+                    'number.between',
                     [
                         'minimal' => $this->minimal,
                         'maximal' => $this->maximal,
@@ -32,7 +32,7 @@ final class BetweenValidator implements Validator
             }
 
             return new ErrorValidateResult(
-                'validation.number.tooLittle',
+                'number.tooLittle',
                 ['minimal' => $this->minimal],
             );
         }
@@ -40,7 +40,7 @@ final class BetweenValidator implements Validator
         if ($this->maximal !== null && $input > $this->maximal) {
             if ($this->minimal) {
                 return new ErrorValidateResult(
-                    'validation.number.between',
+                    'number.between',
                     [
                         'minimal' => $this->minimal,
                         'maximal' => $this->maximal,
@@ -49,7 +49,7 @@ final class BetweenValidator implements Validator
             }
 
             return new ErrorValidateResult(
-                'validation.number.tooGreat',
+                'number.tooGreat',
                 ['maximal' => $this->maximal],
             );
         }

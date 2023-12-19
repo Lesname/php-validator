@@ -34,7 +34,7 @@ final class FormatValidator implements Validator
         if (!$this->format::isFormat($input)) {
             $name = lcfirst((new ReflectionClass($this->format))->getShortName());
 
-            return new ErrorValidateResult("validation.string.format.{$name}");
+            return new ErrorValidateResult("string.format.{$name}");
         }
 
         return new ValidValidateResult();
