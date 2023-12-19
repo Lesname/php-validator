@@ -51,14 +51,16 @@ final class GenericValidatorBuilder implements TypeDocumentValidatorBuilder
             default => throw new RuntimeException(),
         };
 
-        if ($typeDocument->getReference()) {
-            $classReflection = new ReflectionClass($typeDocument->getReference());
+        $reference = $typeDocument->getReference();
+
+        if ($reference && class_exists($reference)) {
+            $classReflection = new ReflectionClass($reference);
 
             $additionalValidators = array_map(
                 static function (ReflectionAttribute $attribute) {
                     $className = $attribute->newInstance();
 
-                    return new $className();
+                    return new $className->validator();
                 },
                 $classReflection->getAttributes(AdditionalValidator::class),
             );
