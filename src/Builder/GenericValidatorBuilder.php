@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace LessValidator\Builder;
 
+use ReflectionClass;
+use ReflectionAttribute;
 use LessValidator\Number\MultipleOfValidator;
 use LessDocumentor\Type\Document\BoolTypeDocument;
 use LessDocumentor\Type\Document\CollectionTypeDocument;
@@ -25,6 +27,7 @@ use LessValidator\String\OptionsValidator;
 use LessValidator\TypeValidator;
 use LessValidator\Validator;
 use RuntimeException;
+use LessValidator\Builder\Attribute\AdditionalValidator;
 use LessValueObject\String\Format\StringFormatValueObject;
 
 final class GenericValidatorBuilder implements TypeDocumentValidatorBuilder
@@ -47,6 +50,28 @@ final class GenericValidatorBuilder implements TypeDocumentValidatorBuilder
             $typeDocument instanceof StringTypeDocument => $this->buildFromStringDocument($typeDocument),
             default => throw new RuntimeException(),
         };
+
+        if ($typeDocument->getReference()) {
+            $classReflection = new ReflectionClass($typeDocument->getReference());
+
+            $additionalValidators = array_map(
+                static function (ReflectionAttribute $attribute) {
+                    $className = $attribute->newInstance();
+
+                    return new $className();
+                },
+                $classReflection->getAttributes(AdditionalValidator::class),
+            );
+
+            if (count($additionalValidators) > 0) {
+                $validator = new ChainValidator(
+                    [
+                        $validator,
+                        ...$additionalValidators,
+                    ],
+                );
+            }
+        }
 
         return $typeDocument->isNullable()
             ? new NullableValidator($validator)
