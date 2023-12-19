@@ -28,6 +28,6 @@ final class FormatValidatorTest extends TestCase
 
         self::assertFalse($invalid->isValid());
         self::assertInstanceOf(ErrorValidateResult::class, $invalid);
-        self::assertSame('validation.string.format.emailAddress', $invalid->code);
+        self::assertSame('string.format.emailAddress', $invalid->code);
     }
 }
