@@ -155,7 +155,7 @@ final class GenericValidatorBuilderTest extends TestCase
     {
         $doc = new NumberTypeDocument(
             new Range(-5, 5),
-            2,
+            .01,
         );
         $doc = $doc->withNullable();
 
@@ -172,8 +172,7 @@ final class GenericValidatorBuilderTest extends TestCase
     {
         $doc = new NumberTypeDocument(
             new Range(1, 5),
-            0,
-            null,
+            1,
         );
 
         $validator = (new GenericValidatorBuilder())

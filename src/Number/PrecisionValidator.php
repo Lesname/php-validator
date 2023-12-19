@@ -10,6 +10,8 @@ use LessValidator\Validator;
 
 /**
  * @psalm-immutable
+ *
+ * @deprecated use MultipleOfValidator
  */
 final class PrecisionValidator implements Validator
 {
