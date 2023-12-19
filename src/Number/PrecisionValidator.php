@@ -10,6 +10,8 @@ use LessValidator\Validator;
 
 /**
  * @psalm-immutable
+ *
+ * @deprecated use MultipleOfValidator
  */
 final class PrecisionValidator implements Validator
 {
@@ -25,7 +27,7 @@ final class PrecisionValidator implements Validator
         if (is_float($input) && preg_match('/\.(\d*)$/', (string)$input, $matches)) {
             if (strlen($matches[1]) > $this->precision) {
                 return new ErrorValidateResult(
-                    'validation.number.precision',
+                    'number.precision',
                     ['max' => $this->precision],
                 );
             }

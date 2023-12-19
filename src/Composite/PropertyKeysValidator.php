@@ -34,7 +34,7 @@ final class PropertyKeysValidator implements Validator
         if (count($diff) > 0) {
             return new SelfValidateResult(
                 new ErrorValidateResult(
-                    'validation.composite.keysNotAllowed',
+                    'composite.keysNotAllowed',
                     ['extra' => array_values($diff)],
                 ),
             );

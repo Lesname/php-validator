@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace LessValidator\Builder;
 
+use LessValidator\Number\MultipleOfValidator;
 use LessDocumentor\Type\Document\BoolTypeDocument;
 use LessDocumentor\Type\Document\CollectionTypeDocument;
 use LessDocumentor\Type\Document\Composite\Property;
@@ -18,14 +19,13 @@ use LessValidator\Composite\PropertyKeysValidator;
 use LessValidator\Composite\PropertyValuesValidator;
 use LessValidator\NullableValidator;
 use LessValidator\Number\BetweenValidator;
-use LessValidator\Number\PrecisionValidator;
 use LessValidator\String\FormatValidator;
 use LessValidator\String\LengthValidator;
 use LessValidator\String\OptionsValidator;
 use LessValidator\TypeValidator;
 use LessValidator\Validator;
-use LessValueObject\String\Format\FormattedStringValueObject;
 use RuntimeException;
+use LessValueObject\String\Format\StringFormatValueObject;
 
 final class GenericValidatorBuilder implements TypeDocumentValidatorBuilder
 {
@@ -97,7 +97,7 @@ final class GenericValidatorBuilder implements TypeDocumentValidatorBuilder
 
         $reference = $typeDocument->getReference();
 
-        if ($reference && is_subclass_of($reference, FormattedStringValueObject::class)) {
+        if ($reference && is_subclass_of($reference, StringFormatValueObject::class)) {
             $validators[] = new FormatValidator($reference);
         }
 
@@ -106,14 +106,10 @@ final class GenericValidatorBuilder implements TypeDocumentValidatorBuilder
 
     private function buildFromNumberDocument(NumberTypeDocument $typeDocument): Validator
     {
-        if ($typeDocument->precision === 0) {
+        if (is_int($typeDocument->multipleOf)) {
             $validators = [TypeValidator::integer()];
         } else {
             $validators = [TypeValidator::number()];
-        }
-
-        if ($typeDocument->precision > 0) {
-            $validators[] = new PrecisionValidator($typeDocument->precision);
         }
 
         if ($typeDocument->range !== null) {
@@ -121,6 +117,10 @@ final class GenericValidatorBuilder implements TypeDocumentValidatorBuilder
                 $typeDocument->range->minimal,
                 $typeDocument->range->maximal,
             );
+        }
+
+        if ($typeDocument->multipleOf !== null) {
+            $validators[] = new MultipleOfValidator($typeDocument->multipleOf);
         }
 
         return new ChainValidator($validators);

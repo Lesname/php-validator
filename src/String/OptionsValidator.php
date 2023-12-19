@@ -31,7 +31,7 @@ final class OptionsValidator implements Validator
         }
 
         return new ErrorValidateResult(
-            'validation.string.notAllowed',
+            'string.notAllowed',
             ['options' => $this->options],
         );
     }

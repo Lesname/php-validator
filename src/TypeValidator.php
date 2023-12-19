@@ -85,7 +85,7 @@ final class TypeValidator implements Validator
 
         if ($valid === false) {
             if ($input === null) {
-                return new ErrorValidateResult('validation.required');
+                return new ErrorValidateResult('required');
             }
 
             return new ErrorValidateResult("type.expected.{$this->type}");
