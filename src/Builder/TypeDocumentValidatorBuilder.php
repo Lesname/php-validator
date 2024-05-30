@@ -8,5 +8,10 @@ use LessValidator\Validator;
 
 interface TypeDocumentValidatorBuilder
 {
+    /**
+     * @deprecated
+     */
     public function fromTypeDocument(TypeDocument $typeDocument): Validator;
+
+    public function build(): Validator;
 }
