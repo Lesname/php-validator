@@ -11,16 +11,16 @@ use LessValidator\String\LengthValidator;
 
 final class StringValidatorBuilder implements ValidatorBuilder
 {
-    private float|int|null $min = null;
+    private int|null $min = null;
 
-    private float|int|null $max = null;
+    private int|null $max = null;
 
-    public static function fromBetween(float|int $min, float|int $max): self
+    public static function fromBetween(int $min, int $max): self
     {
         return (new self())->withBetween($min, $max);
     }
 
-    public function withBetween(float|int $min, float|int $max): self
+    public function withBetween(int $min, int $max): self
     {
         $clone = clone $this;
         $clone->min = $min;
