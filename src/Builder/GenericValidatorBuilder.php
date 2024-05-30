@@ -30,6 +30,9 @@ use RuntimeException;
 use LessValidator\Builder\Attribute\AdditionalValidator;
 use LessValueObject\String\Format\StringFormatValueObject;
 
+/**
+ * @psalm-suppress DeprecatedInterface
+ */
 final class GenericValidatorBuilder implements TypeDocumentValidatorBuilder
 {
     private ?TypeDocument $typeDocument = null;
