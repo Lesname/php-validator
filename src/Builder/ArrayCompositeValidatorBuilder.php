@@ -10,6 +10,9 @@ use LessValidator\ChainValidator;
 use LessValidator\Composite\PropertyKeysValidator;
 use LessValidator\Composite\PropertyValuesValidator;
 
+/**
+ * @psalm-immutable
+ */
 final class ArrayCompositeValidatorBuilder implements ValidatorBuilder
 {
     /**

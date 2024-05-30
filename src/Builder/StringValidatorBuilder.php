@@ -9,6 +9,9 @@ use LessValidator\TypeValidator;
 use LessValidator\ChainValidator;
 use LessValidator\String\LengthValidator;
 
+/**
+ * @psalm-immutable
+ */
 final class StringValidatorBuilder implements ValidatorBuilder
 {
     private int|null $min = null;

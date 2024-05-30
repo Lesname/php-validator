@@ -9,6 +9,9 @@ use LessValidator\TypeValidator;
 use LessValidator\ChainValidator;
 use LessValidator\Number\BetweenValidator;
 
+/**
+ * @psalm-immutable
+ */
 final class NumericValidatorBuilder implements ValidatorBuilder
 {
     private bool $onlyIntegers = false;

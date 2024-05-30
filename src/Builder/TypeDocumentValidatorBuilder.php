@@ -8,6 +8,8 @@ use LessValidator\Validator;
 
 /**
  * @deprecated use ValidatorBuilder
+ *
+ * @psalm-immutable
  */
 interface TypeDocumentValidatorBuilder extends ValidatorBuilder
 {
