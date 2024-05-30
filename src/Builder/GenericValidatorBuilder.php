@@ -72,7 +72,7 @@ final class GenericValidatorBuilder implements TypeDocumentValidatorBuilder
 
         $reference = $typeDocument->getReference();
 
-        if ($reference && class_exists($reference)) {
+        if (is_string($reference) && class_exists($reference)) {
             $classReflection = new ReflectionClass($reference);
 
             $additionalValidators = array_map(
@@ -148,7 +148,7 @@ final class GenericValidatorBuilder implements TypeDocumentValidatorBuilder
 
         $reference = $typeDocument->getReference();
 
-        if ($reference && is_subclass_of($reference, StringFormatValueObject::class)) {
+        if (is_string($reference) && is_subclass_of($reference, StringFormatValueObject::class)) {
             $validators[] = new FormatValidator($reference);
         }
 
