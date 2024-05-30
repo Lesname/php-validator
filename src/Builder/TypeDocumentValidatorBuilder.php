@@ -6,12 +6,13 @@ namespace LessValidator\Builder;
 use LessDocumentor\Type\Document\TypeDocument;
 use LessValidator\Validator;
 
-interface TypeDocumentValidatorBuilder
+/**
+ * @deprecated use ValidatorBuilder
+ */
+interface TypeDocumentValidatorBuilder extends ValidatorBuilder
 {
     /**
      * @deprecated
      */
     public function fromTypeDocument(TypeDocument $typeDocument): Validator;
-
-    public function build(): Validator;
 }
