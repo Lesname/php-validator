@@ -5,6 +5,7 @@ namespace LessValidator\Builder;
 
 use ReflectionClass;
 use ReflectionAttribute;
+use LessDocumentor\Helper\AttributeHelper;
 use LessValidator\Number\MultipleOfValidator;
 use LessDocumentor\Type\Document\BoolTypeDocument;
 use LessDocumentor\Type\Document\CollectionTypeDocument;
@@ -32,6 +33,8 @@ use LessValueObject\String\Format\StringFormatValueObject;
 
 /**
  * @psalm-suppress DeprecatedInterface
+ *
+ * @psalm-immutable
  */
 final class GenericValidatorBuilder implements TypeDocumentValidatorBuilder
 {
@@ -45,6 +48,10 @@ final class GenericValidatorBuilder implements TypeDocumentValidatorBuilder
         return $clone;
     }
 
+    /**
+     * @psalm-suppress ImpureMethodCall
+     * @psalm-suppress ImpureFunctionCall
+     */
     public function build(): Validator
     {
         if ($this->typeDocument === null) {
@@ -75,14 +82,13 @@ final class GenericValidatorBuilder implements TypeDocumentValidatorBuilder
         if (is_string($reference) && class_exists($reference)) {
             $classReflection = new ReflectionClass($reference);
 
-            $additionalValidators = array_map(
-                static function (ReflectionAttribute $attribute) {
-                    $className = $attribute->newInstance();
+            $additionalValidators = [];
 
-                    return new $className->validator();
-                },
-                $classReflection->getAttributes(AdditionalValidator::class),
-            );
+            foreach ($classReflection->getAttributes(AdditionalValidator::class) as $attribute) {
+                $className = $attribute->newInstance();
+
+                $additionalValidators[] = new $className->validator();
+            }
 
             if (count($additionalValidators) > 0) {
                 $validator = new ChainValidator(
@@ -125,15 +131,16 @@ final class GenericValidatorBuilder implements TypeDocumentValidatorBuilder
             $validators[] = new PropertyKeysValidator(array_keys($typeDocument->properties));
         }
 
+        $propertyValidators = [];
+
+        foreach ($typeDocument->properties as $key => $property) {
+            $propertyValidators[$key] = $this->fromTypeDocument($property->type);
+        }
+
         return new ChainValidator(
             [
                 ...$validators,
-                new PropertyValuesValidator(
-                    array_map(
-                        fn (Property $doc): Validator => $this->fromTypeDocument($doc->type),
-                        $typeDocument->properties,
-                    ),
-                ),
+                new PropertyValuesValidator($propertyValidators),
             ],
         );
     }
