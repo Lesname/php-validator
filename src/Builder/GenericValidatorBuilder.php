@@ -30,10 +30,29 @@ use RuntimeException;
 use LessValidator\Builder\Attribute\AdditionalValidator;
 use LessValueObject\String\Format\StringFormatValueObject;
 
+/**
+ * @psalm-suppress DeprecatedInterface
+ */
 final class GenericValidatorBuilder implements TypeDocumentValidatorBuilder
 {
-    public function fromTypeDocument(TypeDocument $typeDocument): Validator
+    private ?TypeDocument $typeDocument = null;
+
+    public function withTypeDocument(TypeDocument $typeDocument): self
     {
+        $clone = clone $this;
+        $clone->typeDocument = $typeDocument;
+
+        return $clone;
+    }
+
+    public function build(): Validator
+    {
+        if ($this->typeDocument === null) {
+            throw new RuntimeException();
+        }
+
+        $typeDocument = $this->typeDocument;
+
         $validator = match (true) {
             $typeDocument instanceof BoolTypeDocument => TypeValidator::boolean(),
             $typeDocument instanceof CollectionTypeDocument => $this->buildFromCollectionDocument($typeDocument),
@@ -78,6 +97,11 @@ final class GenericValidatorBuilder implements TypeDocumentValidatorBuilder
         return $typeDocument->isNullable()
             ? new NullableValidator($validator)
             : $validator;
+    }
+
+    public function fromTypeDocument(TypeDocument $typeDocument): Validator
+    {
+        return $this->withTypeDocument($typeDocument)->build();
     }
 
     private function buildFromCollectionDocument(CollectionTypeDocument $typeDocument): Validator
