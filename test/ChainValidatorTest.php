@@ -27,7 +27,7 @@ final class ChainValidatorTest extends TestCase
         $s = $this->createMock(Validator::class);
         $s->expects(self::once())->method('validate')->with('foo')->willReturn($sResult);
 
-        $validator = new ChainValidator([$f, $s]);
+        $validator = ChainValidator::chain($f, $s);
 
         self::assertTrue($validator->validate('foo')->isValid());
     }

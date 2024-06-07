@@ -14,38 +14,64 @@ use LessValidator\String\LengthValidator;
  */
 final class StringValidatorBuilder implements ValidatorBuilder
 {
-    private int|null $min = null;
+    private int|null $minLength = null;
 
-    private int|null $max = null;
+    private int|null $maxLength = null;
 
-    public static function fromBetween(int $min, int $max): self
+    public static function fromBetween(int $minLength, int $maxLength): self
     {
-        return (new self())->withBetween($min, $max);
+        return (new self())->withBetween($minLength, $maxLength);
     }
 
-    public function withBetween(int $min, int $max): self
+    public function getMinLength(): ?int
+    {
+        return $this->minLength;
+    }
+
+    public function getMaxLength(): ?int
+    {
+        return $this->maxLength;
+    }
+
+    public function withBetween(int $minLength, int $maxLength): self
     {
         $clone = clone $this;
-        $clone->min = $min;
-        $clone->max = $max;
+        $clone->minLength = $minLength;
+        $clone->maxLength = $maxLength;
+
+        return $clone;
+    }
+
+    public function withMinLength(int $minLength): self
+    {
+        $clone = clone $this;
+        $clone->minLength = $minLength;
+
+        return $clone;
+    }
+
+    public function withMaxLength(int $maxLength): self
+    {
+        $clone = clone $this;
+        $clone->maxLength = $maxLength;
 
         return $clone;
     }
 
     public function build(): Validator
     {
-        if ($this->min === null) {
-            throw new RuntimeException("No minimum");
+        if ($this->minLength === null) {
+            throw new RuntimeException("No minimum length");
         }
 
-        if ($this->max === null) {
-            throw new RuntimeException("No maximum");
+        if ($this->maxLength === null) {
+            throw new RuntimeException("No maximum length");
         }
 
         return new ChainValidator(
             [
                 TypeValidator::string(),
-                new LengthValidator($this->min, $this->max),
+                new LengthValidator($this->minLength, $this->maxLength),
             ],
         );
     }

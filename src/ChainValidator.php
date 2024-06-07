@@ -22,6 +22,11 @@ final class ChainValidator implements Validator
         }
     }
 
+    public static function chain(Validator ...$validators): self
+    {
+        return new self($validators);
+    }
+
     public function validate(mixed $input): ValidateResult
     {
         foreach ($this->validators as $validator) {
