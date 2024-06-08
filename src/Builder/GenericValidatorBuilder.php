@@ -4,12 +4,9 @@ declare(strict_types=1);
 namespace LessValidator\Builder;
 
 use ReflectionClass;
-use ReflectionAttribute;
-use LessDocumentor\Helper\AttributeHelper;
 use LessValidator\Number\MultipleOfValidator;
 use LessDocumentor\Type\Document\BoolTypeDocument;
 use LessDocumentor\Type\Document\CollectionTypeDocument;
-use LessDocumentor\Type\Document\Composite\Property;
 use LessDocumentor\Type\Document\CompositeTypeDocument;
 use LessDocumentor\Type\Document\EnumTypeDocument;
 use LessDocumentor\Type\Document\NumberTypeDocument;
@@ -32,11 +29,9 @@ use LessValidator\Builder\Attribute\AdditionalValidator;
 use LessValueObject\String\Format\StringFormatValueObject;
 
 /**
- * @psalm-suppress DeprecatedInterface
- *
  * @psalm-immutable
  */
-final class GenericValidatorBuilder implements TypeDocumentValidatorBuilder
+final class GenericValidatorBuilder implements ValidatorBuilder
 {
     private ?TypeDocument $typeDocument = null;
 
@@ -105,6 +100,9 @@ final class GenericValidatorBuilder implements TypeDocumentValidatorBuilder
             : $validator;
     }
 
+    /**
+     * @deprecated use withTypeDocument
+     */
     public function fromTypeDocument(TypeDocument $typeDocument): Validator
     {
         return $this->withTypeDocument($typeDocument)->build();
@@ -118,7 +116,7 @@ final class GenericValidatorBuilder implements TypeDocumentValidatorBuilder
             $chained[] = new SizeValidator($typeDocument->size->minimal, $typeDocument->size->maximal);
         }
 
-        $chained[] = new ItemsValidator($this->fromTypeDocument($typeDocument->item));
+        $chained[] = new ItemsValidator($this->withTypeDocument($typeDocument->item)->build());
 
         return new ChainValidator($chained);
     }
@@ -134,7 +132,7 @@ final class GenericValidatorBuilder implements TypeDocumentValidatorBuilder
         $propertyValidators = [];
 
         foreach ($typeDocument->properties as $key => $property) {
-            $propertyValidators[$key] = $this->fromTypeDocument($property->type);
+            $propertyValidators[$key] = $this->withTypeDocument($property->type)->build();
         }
 
         return new ChainValidator(
