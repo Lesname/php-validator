@@ -116,7 +116,7 @@ final class GenericValidatorBuilder implements ValidatorBuilder
             $chained[] = new SizeValidator($typeDocument->size->minimal, $typeDocument->size->maximal);
         }
 
-        $chained[] = new ItemsValidator($this->fromTypeDocument($typeDocument->item));
+        $chained[] = new ItemsValidator($this->withTypeDocument($typeDocument->item)->build());
 
         return new ChainValidator($chained);
     }
@@ -132,7 +132,7 @@ final class GenericValidatorBuilder implements ValidatorBuilder
         $propertyValidators = [];
 
         foreach ($typeDocument->properties as $key => $property) {
-            $propertyValidators[$key] = $this->fromTypeDocument($property->type);
+            $propertyValidators[$key] = $this->withTypeDocument($property->type)->build();
         }
 
         return new ChainValidator(
