@@ -13,28 +13,32 @@ use LessValidator\Validator;
 final class PropertyValuesValidator implements Validator
 {
     /** @var array<string, Validator> */
-    public array $proprtyValueValidators = [];
+    public readonly array $propertyValueValidators;
 
-    /** @param iterable<string, Validator> $proprtyValueValidators */
-    public function __construct(iterable $proprtyValueValidators)
+    /** @param iterable<string, Validator> $propertyValueValidators */
+    public function __construct(iterable $propertyValueValidators)
     {
-        foreach ($proprtyValueValidators as $name => $proprtyValueValidator) {
-            $this->proprtyValueValidators[$name] = $proprtyValueValidator;
+        $propertyValueValidatorsArray = [];
+
+        foreach ($propertyValueValidators as $name => $propertyValueValidator) {
+            $propertyValueValidatorsArray[$name] = $propertyValueValidator;
         }
+
+        $this->propertyValueValidators = $propertyValueValidatorsArray;
     }
 
     public function validate(mixed $input): ValidateResult
     {
         assert(is_array($input));
 
-        $proprtyValueValidators = $this->proprtyValueValidators;
+        $propertyValueValidators = $this->propertyValueValidators;
 
         return new PropertiesValidateResult(
             (
                 /** @psalm-pure */
-                function (array $input) use ($proprtyValueValidators): iterable {
-                    foreach ($proprtyValueValidators as $name => $proprtyValueValidator) {
-                        yield $name => $proprtyValueValidator->validate($input[$name] ?? null);
+                function (array $input) use ($propertyValueValidators): iterable {
+                    foreach ($propertyValueValidators as $name => $propertyValueValidator) {
+                        yield $name => $propertyValueValidator->validate($input[$name] ?? null);
                     }
                 }
             )($input),

@@ -11,19 +11,25 @@ use LessValidator\ValidateResult\ValidateResult;
 final class PropertiesValidateResult implements ValidateResult
 {
     /** @var array<string, ValidateResult> */
-    public array $properties = [];
+    public readonly array $properties;
 
-    private bool $valid = true;
+    private readonly bool $valid;
 
     /**
      * @param iterable<string, ValidateResult> $properties
      */
     public function __construct(iterable $properties)
     {
+        $arrayProperties = [];
+        $valid = true;
+
         foreach ($properties as $name => $property) {
-            $this->valid = $this->valid && $property->isValid();
-            $this->properties[$name] = $property;
+            $valid = $valid && $property->isValid();
+            $arrayProperties[$name] = $property;
         }
+
+        $this->properties = $arrayProperties;
+        $this->valid = $valid;
     }
 
     public function isValid(): bool

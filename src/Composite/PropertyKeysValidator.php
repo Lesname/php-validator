@@ -7,6 +7,7 @@ use LessValidator\ValidateResult\ErrorValidateResult;
 use LessValidator\ValidateResult\ValidateResult;
 use LessValidator\ValidateResult\ValidValidateResult;
 use LessValidator\Validator;
+use LessValidator\ValidateResult\Composite\SelfValidateResult;
 
 /**
  * @psalm-immutable
@@ -14,14 +15,18 @@ use LessValidator\Validator;
 final class PropertyKeysValidator implements Validator
 {
     /** @var array<string> */
-    public array $keys = [];
+    public readonly array $keys;
 
     /** @param iterable<int, string> $keys */
     public function __construct(iterable $keys)
     {
+        $keysArray = [];
+
         foreach ($keys as $key) {
-            $this->keys[] = $key;
+            $keysArray[] = $key;
         }
+
+        $this->keys = $keysArray;
     }
 
     public function validate(mixed $input): ValidateResult
@@ -31,9 +36,11 @@ final class PropertyKeysValidator implements Validator
         $diff = array_diff(array_keys($input), $this->keys);
 
         if (count($diff) > 0) {
-            return new ErrorValidateResult(
-                'composite.keys.notAllowed',
-                ['extra' => array_values($diff)],
+            return new SelfValidateResult(
+                new ErrorValidateResult(
+                    'composite.keysNotAllowed',
+                    ['extra' => array_values($diff)],
+                ),
             );
         }
 

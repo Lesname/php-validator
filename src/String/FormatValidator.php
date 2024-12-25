@@ -7,7 +7,7 @@ use LessValidator\ValidateResult\ErrorValidateResult;
 use LessValidator\ValidateResult\ValidateResult;
 use LessValidator\ValidateResult\ValidValidateResult;
 use LessValidator\Validator;
-use LessValueObject\String\Format\FormattedStringValueObject;
+use LessValueObject\String\Format\StringFormatValueObject;
 use ReflectionClass;
 use ReflectionException;
 
@@ -17,22 +17,18 @@ use ReflectionException;
 final class FormatValidator implements Validator
 {
     /**
-     * @param class-string<FormattedStringValueObject> $format
+     * @param class-string<StringFormatValueObject> $format
      */
     public function __construct(public readonly string $format)
     {}
 
-    /**
-     * @throws ReflectionException
-     *
-     * @psalm-suppress ImpureMethodCall getShortName
-     */
     public function validate(mixed $input): ValidateResult
     {
         assert(is_string($input));
 
         if (!$this->format::isFormat($input)) {
-            $name = lcfirst((new ReflectionClass($this->format))->getShortName());
+            $formatParts = explode('\\', $this->format);
+            $name = lcfirst(array_pop($formatParts));
 
             return new ErrorValidateResult("string.format.{$name}");
         }

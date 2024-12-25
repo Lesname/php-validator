@@ -14,14 +14,18 @@ use LessValidator\Validator;
 final class OptionsValidator implements Validator
 {
     /** @var array<string> */
-    public array $options = [];
+    public readonly array $options;
 
     /** @param iterable<string> $options */
     public function __construct(iterable $options)
     {
+        $arrayOptions = [];
+
         foreach ($options as $option) {
-            $this->options[] = $option;
+            $arrayOptions[] = $option;
         }
+
+        $this->options = $arrayOptions;
     }
 
     public function validate(mixed $input): ValidateResult
@@ -31,7 +35,7 @@ final class OptionsValidator implements Validator
         }
 
         return new ErrorValidateResult(
-            'string.options.notAllowed',
+            'string.notAllowed',
             ['options' => $this->options],
         );
     }

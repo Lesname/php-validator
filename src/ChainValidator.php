@@ -12,14 +12,23 @@ use LessValidator\ValidateResult\ValidValidateResult;
 final class ChainValidator implements Validator
 {
     /** @var array<Validator> */
-    public array $validators = [];
+    public readonly array $validators;
 
     /** @param iterable<Validator> $validators */
     public function __construct(iterable $validators)
     {
+        $validatorsArray = [];
+
         foreach ($validators as $validator) {
-            $this->validators[] = $validator;
+            $validatorsArray[] = $validator;
         }
+
+        $this->validators = $validatorsArray;
+    }
+
+    public static function chain(Validator ...$validators): self
+    {
+        return new self($validators);
     }
 
     public function validate(mixed $input): ValidateResult

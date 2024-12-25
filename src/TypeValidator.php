@@ -13,13 +13,16 @@ use RuntimeException;
  */
 final class TypeValidator implements Validator
 {
-    public const BOOLEAN = 'boolean';
-    public const COLLECTION = 'collection';
-    public const COMPOSITE = 'composite';
-    public const INTEGER = 'integer';
-    public const NUMBER = 'number';
-    public const STRING = 'string';
+    public const string BOOLEAN = 'boolean';
+    public const string COLLECTION = 'collection';
+    public const string COMPOSITE = 'composite';
+    public const string INTEGER = 'integer';
+    public const string NUMBER = 'number';
+    public const string STRING = 'string';
 
+    /**
+     * @psalm-pure
+     */
     public function __construct(public readonly string $type)
     {}
 
@@ -85,7 +88,7 @@ final class TypeValidator implements Validator
 
         if ($valid === false) {
             if ($input === null) {
-                return new ErrorValidateResult('type.required');
+                return new ErrorValidateResult('required');
             }
 
             return new ErrorValidateResult("type.expected.{$this->type}");

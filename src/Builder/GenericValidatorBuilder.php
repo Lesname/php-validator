@@ -3,10 +3,10 @@ declare(strict_types=1);
 
 namespace LessValidator\Builder;
 
-use BackedEnum;
+use ReflectionClass;
+use LessValidator\Number\MultipleOfValidator;
 use LessDocumentor\Type\Document\BoolTypeDocument;
 use LessDocumentor\Type\Document\CollectionTypeDocument;
-use LessDocumentor\Type\Document\Composite\Property;
 use LessDocumentor\Type\Document\CompositeTypeDocument;
 use LessDocumentor\Type\Document\EnumTypeDocument;
 use LessDocumentor\Type\Document\NumberTypeDocument;
@@ -19,46 +19,51 @@ use LessValidator\Composite\PropertyKeysValidator;
 use LessValidator\Composite\PropertyValuesValidator;
 use LessValidator\NullableValidator;
 use LessValidator\Number\BetweenValidator;
-use LessValidator\Number\PrecisionValidator;
 use LessValidator\String\FormatValidator;
 use LessValidator\String\LengthValidator;
 use LessValidator\String\OptionsValidator;
 use LessValidator\TypeValidator;
 use LessValidator\Validator;
-use LessValueObject\String\Format\FormattedStringValueObject;
 use RuntimeException;
+use LessValidator\Builder\Attribute\AdditionalValidator;
+use LessValueObject\String\Format\StringFormatValueObject;
 
-final class GenericValidatorBuilder implements TypeDocumentValidatorBuilder
+/**
+ * @psalm-immutable
+ *
+ * @deprecated use TypeDocumentValidatorBuilder
+ */
+final class GenericValidatorBuilder implements ValidatorBuilder
 {
-    public function fromTypeDocument(TypeDocument $typeDocument): Validator
+    public function __construct(private readonly ?TypeDocument $typeDocument = null)
+    {}
+
+    public function withTypeDocument(TypeDocument $typeDocument): self
     {
+        return new self($typeDocument);
+    }
+
+    /**
+     * @psalm-suppress ImpureMethodCall newInstance
+     * @psalm-suppress ImpureFunctionCall class_exists
+     */
+    public function build(): Validator
+    {
+        if ($this->typeDocument === null) {
+            throw new RuntimeException();
+        }
+
+        $typeDocument = $this->typeDocument;
+
         $validator = match (true) {
             $typeDocument instanceof BoolTypeDocument => TypeValidator::boolean(),
-            $typeDocument instanceof CollectionTypeDocument => new ChainValidator(
-                [
-                    TypeValidator::collection(),
-                    new SizeValidator($typeDocument->size->minimal, $typeDocument->size->maximal),
-                    new ItemsValidator($this->fromTypeDocument($typeDocument->item)),
-                ],
-            ),
+            $typeDocument instanceof CollectionTypeDocument => $this->buildFromCollectionDocument($typeDocument),
             $typeDocument instanceof CompositeTypeDocument => $this->buildFromCompositeDocument($typeDocument),
             $typeDocument instanceof EnumTypeDocument => new ChainValidator(
                 [
                     TypeValidator::string(),
                     new OptionsValidator(
-                        array_map(
-                            static function (BackedEnum | string $item): string {
-                                if (is_string($item)) {
-                                    return $item;
-                                }
-
-                                $value = $item->value;
-                                assert(is_string($value));
-
-                                return $value;
-                            },
-                            $typeDocument->cases,
-                        )
+                        $typeDocument->cases,
                     ),
                 ],
             ),
@@ -67,9 +72,53 @@ final class GenericValidatorBuilder implements TypeDocumentValidatorBuilder
             default => throw new RuntimeException(),
         };
 
+        $reference = $typeDocument->getReference();
+
+        if (is_string($reference) && class_exists($reference)) {
+            $classReflection = new ReflectionClass($reference);
+
+            $additionalValidators = [];
+
+            foreach ($classReflection->getAttributes(AdditionalValidator::class) as $attribute) {
+                $className = $attribute->newInstance();
+
+                $additionalValidators[] = new $className->validator();
+            }
+
+            if (count($additionalValidators) > 0) {
+                $validator = new ChainValidator(
+                    [
+                        $validator,
+                        ...$additionalValidators,
+                    ],
+                );
+            }
+        }
+
         return $typeDocument->isNullable()
             ? new NullableValidator($validator)
             : $validator;
+    }
+
+    /**
+     * @deprecated use withTypeDocument
+     */
+    public function fromTypeDocument(TypeDocument $typeDocument): Validator
+    {
+        return $this->withTypeDocument($typeDocument)->build();
+    }
+
+    private function buildFromCollectionDocument(CollectionTypeDocument $typeDocument): Validator
+    {
+        $chained = [TypeValidator::collection()];
+
+        if ($typeDocument->size) {
+            $chained[] = new SizeValidator($typeDocument->size->minimal, $typeDocument->size->maximal);
+        }
+
+        $chained[] = new ItemsValidator($this->withTypeDocument($typeDocument->item)->build());
+
+        return new ChainValidator($chained);
     }
 
     private function buildFromCompositeDocument(CompositeTypeDocument $typeDocument): Validator
@@ -80,29 +129,31 @@ final class GenericValidatorBuilder implements TypeDocumentValidatorBuilder
             $validators[] = new PropertyKeysValidator(array_keys($typeDocument->properties));
         }
 
+        $propertyValidators = [];
+
+        foreach ($typeDocument->properties as $key => $property) {
+            $propertyValidators[$key] = $this->withTypeDocument($property->type)->build();
+        }
+
         return new ChainValidator(
             [
                 ...$validators,
-                new PropertyValuesValidator(
-                    array_map(
-                        fn (Property $doc): Validator => $this->fromTypeDocument($doc->type),
-                        $typeDocument->properties,
-                    ),
-                ),
+                new PropertyValuesValidator($propertyValidators),
             ],
         );
     }
 
     private function buildFromStringDocument(StringTypeDocument $typeDocument): Validator
     {
-        $validators = [
-            TypeValidator::string(),
-            new LengthValidator($typeDocument->length->minimal, $typeDocument->length->maximal),
-        ];
+        $validators = [TypeValidator::string()];
+
+        if ($typeDocument->length) {
+            $validators[] = new LengthValidator($typeDocument->length->minimal, $typeDocument->length->maximal);
+        }
 
         $reference = $typeDocument->getReference();
 
-        if ($reference && is_subclass_of($reference, FormattedStringValueObject::class)) {
+        if (is_string($reference) && is_subclass_of($reference, StringFormatValueObject::class)) {
             $validators[] = new FormatValidator($reference);
         }
 
@@ -111,21 +162,21 @@ final class GenericValidatorBuilder implements TypeDocumentValidatorBuilder
 
     private function buildFromNumberDocument(NumberTypeDocument $typeDocument): Validator
     {
-        if ($typeDocument->precision === 0) {
+        if (is_int($typeDocument->multipleOf)) {
             $validators = [TypeValidator::integer()];
         } else {
             $validators = [TypeValidator::number()];
         }
 
-        if ($typeDocument->precision > 0) {
-            $validators[] = new PrecisionValidator($typeDocument->precision);
-        }
-
-        if ($typeDocument->range->minimal !== null || $typeDocument->range->maximal !== null) {
+        if ($typeDocument->range !== null) {
             $validators[] = new BetweenValidator(
                 $typeDocument->range->minimal,
                 $typeDocument->range->maximal,
             );
+        }
+
+        if ($typeDocument->multipleOf !== null) {
+            $validators[] = new MultipleOfValidator($typeDocument->multipleOf);
         }
 
         return new ChainValidator($validators);

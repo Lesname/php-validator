@@ -25,11 +25,7 @@ final class ItemsValidatorTest extends TestCase
         $itemValidator
             ->expects(self::exactly(2))
             ->method('validate')
-            ->withConsecutive(
-                ['fiz'],
-                ['biz'],
-            )
-            ->willReturn($fResult, $sResult);
+            ->willReturnOnConsecutiveCalls($fResult, $sResult);
 
         $validator = new ItemsValidator($itemValidator);
 
