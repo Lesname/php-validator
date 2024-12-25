@@ -1,13 +1,7 @@
 {
   "name": "lessname/validator",
   "description": "Validate your input",
-  "license": "proprietary",
-  "repositories": [
-    {
-      "type": "composer",
-      "url": "https://gitlab.com/api/v4/group/6632935/-/packages/composer/packages.json"
-    }
-  ],
+  "license": "MIT",
   "require": {
     "php": "^8.4.0",
 
