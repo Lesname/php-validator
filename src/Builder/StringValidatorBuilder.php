@@ -14,13 +14,17 @@ use LessValidator\String\LengthValidator;
  */
 final class StringValidatorBuilder implements ValidatorBuilder
 {
-    private int|null $minLength = null;
+    public function __construct(
+        private readonly ?int $minLength = null,
+        private readonly ?int $maxLength = null,
+    ) {}
 
-    private int|null $maxLength = null;
-
+    /**
+     * @deprecated use constructor
+     */
     public static function fromBetween(int $minLength, int $maxLength): self
     {
-        return (new self())->withBetween($minLength, $maxLength);
+        return new self($minLength, $maxLength);
     }
 
     public function getMinLength(): ?int
@@ -35,27 +39,17 @@ final class StringValidatorBuilder implements ValidatorBuilder
 
     public function withBetween(int $minLength, int $maxLength): self
     {
-        $clone = clone $this;
-        $clone->minLength = $minLength;
-        $clone->maxLength = $maxLength;
-
-        return $clone;
+        return new self($minLength, $maxLength);
     }
 
     public function withMinLength(int $minLength): self
     {
-        $clone = clone $this;
-        $clone->minLength = $minLength;
-
-        return $clone;
+        return new self($minLength, $this->maxLength);
     }
 
     public function withMaxLength(int $maxLength): self
     {
-        $clone = clone $this;
-        $clone->maxLength = $maxLength;
-
-        return $clone;
+        return new self($this->minLength, $maxLength);
     }
 
     public function build(): Validator

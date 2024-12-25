@@ -11,19 +11,25 @@ use LessValidator\ValidateResult\ValidateResult;
 final class ItemsValidateResult implements ValidateResult
 {
     /** @var array<int, ValidateResult> */
-    public array $items = [];
+    public readonly array $items;
 
-    private bool $valid = true;
+    private readonly bool $valid;
 
     /**
      * @param iterable<int, ValidateResult> $items
      */
     public function __construct(iterable $items)
     {
+        $arrayItems = [];
+        $valid = true;
+
         foreach ($items as $item) {
-            $this->valid = $this->valid && $item->isValid();
-            $this->items[] = $item;
+            $valid = $valid && $item->isValid();
+            $arrayItems[] = $item;
         }
+
+        $this->items = $arrayItems;
+        $this->valid = $valid;
     }
 
     public function isValid(): bool

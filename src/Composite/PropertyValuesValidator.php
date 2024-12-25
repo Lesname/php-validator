@@ -13,14 +13,18 @@ use LessValidator\Validator;
 final class PropertyValuesValidator implements Validator
 {
     /** @var array<string, Validator> */
-    public array $propertyValueValidators = [];
+    public readonly array $propertyValueValidators;
 
     /** @param iterable<string, Validator> $propertyValueValidators */
     public function __construct(iterable $propertyValueValidators)
     {
+        $propertyValueValidatorsArray = [];
+
         foreach ($propertyValueValidators as $name => $propertyValueValidator) {
-            $this->propertyValueValidators[$name] = $propertyValueValidator;
+            $propertyValueValidatorsArray[$name] = $propertyValueValidator;
         }
+
+        $this->propertyValueValidators = $propertyValueValidatorsArray;
     }
 
     public function validate(mixed $input): ValidateResult

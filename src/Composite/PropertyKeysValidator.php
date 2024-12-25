@@ -15,14 +15,18 @@ use LessValidator\ValidateResult\Composite\SelfValidateResult;
 final class PropertyKeysValidator implements Validator
 {
     /** @var array<string> */
-    public array $keys = [];
+    public readonly array $keys;
 
     /** @param iterable<int, string> $keys */
     public function __construct(iterable $keys)
     {
+        $keysArray = [];
+
         foreach ($keys as $key) {
-            $this->keys[] = $key;
+            $keysArray[] = $key;
         }
+
+        $this->keys = $keysArray;
     }
 
     public function validate(mixed $input): ValidateResult

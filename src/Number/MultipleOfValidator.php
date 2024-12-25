@@ -41,21 +41,24 @@ final class MultipleOfValidator implements Validator
             return true;
         }
 
-        if (preg_match('/^(\d+)\.(\d+)$/', (string)$of, $matches)) {
-            $precision = strlen($matches[2]);
-            $of = (int)($matches[1] . $matches[2]);
+        if (is_float($of)) {
+            $ofParts = explode('.', (string)$of);
+            $precision = strlen($ofParts[1]);
+            $of = (int)($ofParts[0] . $ofParts[1]);
             $power = pow(10, $precision);
         } else {
             $precision = 0;
             $power = 1;
         }
 
-        if (preg_match('/^(\d+)\.(\d+)$/', (string)$value, $matches)) {
-            if (strlen($matches[2]) > $precision) {
+        if (is_float($value)) {
+            $valueParts = explode('.', (string)$value);
+
+            if (strlen($valueParts[1]) > $precision) {
                 return false;
             } else {
-                $float = str_pad($matches[2], $precision, '0');
-                $check = (int)($matches[1] . $float);
+                $float = str_pad($valueParts[1], $precision, '0');
+                $check = (int)($valueParts[0] . $float);
             }
         } else {
             $check = $value * $power;

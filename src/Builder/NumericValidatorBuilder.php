@@ -14,12 +14,15 @@ use LessValidator\Number\BetweenValidator;
  */
 final class NumericValidatorBuilder implements ValidatorBuilder
 {
-    private bool $onlyIntegers = false;
+    public function __construct(
+        private readonly bool $onlyIntegers = false,
+        private readonly float|int|null $minimal = null,
+        private readonly float|int|null $maximal = null,
+    ) {}
 
-    private float|int|null $minimal = null;
-
-    private float|int|null $maximal = null;
-
+    /**
+     * @deprecated use constructor
+     */
     public static function fromBetween(float|int $minimal, float|int $maximal): self
     {
         return (new self())->withBetween($minimal, $maximal);
@@ -42,35 +45,22 @@ final class NumericValidatorBuilder implements ValidatorBuilder
 
     public function withBetween(float|int $minimal, float|int $maximal): self
     {
-        $clone = clone $this;
-        $clone->minimal = $minimal;
-        $clone->maximal = $maximal;
-
-        return $clone;
+        return new self($this->onlyIntegers, $minimal, $maximal);
     }
 
     public function withMinimum(float|int $minimal): self
     {
-        $clone = clone $this;
-        $clone->minimal = $minimal;
-
-        return $clone;
+        return new self($this->onlyIntegers, $minimal, $this->maximal);
     }
 
     public function withMaximal(float|int $maximal): self
     {
-        $clone = clone $this;
-        $clone->maximal = $maximal;
-
-        return $clone;
+        return new self($this->onlyIntegers, $this->minimal, $maximal);
     }
 
     public function withOnlyIntegers(bool $onlyIntegers = true): self
     {
-        $clone = clone $this;
-        $clone->onlyIntegers = $onlyIntegers;
-
-        return $clone;
+        return new self($onlyIntegers, $this->minimal, $this->maximal);
     }
 
     public function build(): Validator

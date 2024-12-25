@@ -20,6 +20,9 @@ final class TypeValidator implements Validator
     public const string NUMBER = 'number';
     public const string STRING = 'string';
 
+    /**
+     * @psalm-pure
+     */
     public function __construct(public readonly string $type)
     {}
 

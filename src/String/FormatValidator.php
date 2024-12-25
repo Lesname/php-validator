@@ -22,17 +22,13 @@ final class FormatValidator implements Validator
     public function __construct(public readonly string $format)
     {}
 
-    /**
-     * @throws ReflectionException
-     *
-     * @psalm-suppress ImpureMethodCall getShortName
-     */
     public function validate(mixed $input): ValidateResult
     {
         assert(is_string($input));
 
         if (!$this->format::isFormat($input)) {
-            $name = lcfirst((new ReflectionClass($this->format))->getShortName());
+            $formatParts = explode('\\', $this->format);
+            $name = lcfirst(array_pop($formatParts));
 
             return new ErrorValidateResult("string.format.{$name}");
         }

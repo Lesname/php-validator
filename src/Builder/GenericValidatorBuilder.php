@@ -30,22 +30,22 @@ use LessValueObject\String\Format\StringFormatValueObject;
 
 /**
  * @psalm-immutable
+ *
+ * @deprecated use TypeDocumentValidatorBuilder
  */
 final class GenericValidatorBuilder implements ValidatorBuilder
 {
-    private ?TypeDocument $typeDocument = null;
+    public function __construct(private readonly ?TypeDocument $typeDocument = null)
+    {}
 
     public function withTypeDocument(TypeDocument $typeDocument): self
     {
-        $clone = clone $this;
-        $clone->typeDocument = $typeDocument;
-
-        return $clone;
+        return new self($typeDocument);
     }
 
     /**
-     * @psalm-suppress ImpureMethodCall
-     * @psalm-suppress ImpureFunctionCall
+     * @psalm-suppress ImpureMethodCall newInstance
+     * @psalm-suppress ImpureFunctionCall class_exists
      */
     public function build(): Validator
     {

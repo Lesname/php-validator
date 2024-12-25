@@ -16,16 +16,19 @@ use LessValidator\Composite\PropertyValuesValidator;
 final class ArrayCompositeValidatorBuilder implements ValidatorBuilder
 {
     /**
-     * @var array<string, Validator>|null
+     * @param array<string, Validator>|null $valueValidators
      */
-    private ?array $arrayCompositeValidators = null;
+    public function __construct(private readonly ?array $valueValidators = null)
+    {}
 
     /**
+     * @deprecated use constructor
+     *
      * @param array<string, Validator> $validators
      */
     public static function fromArrayCompositeValidators(array $validators): self
     {
-        return (new self())->withArrayCompositeValidators($validators);
+        return new self($validators);
     }
 
     /**
@@ -33,23 +36,28 @@ final class ArrayCompositeValidatorBuilder implements ValidatorBuilder
      */
     public function withArrayCompositeValidators(array $validators): self
     {
-        $clone = clone $this;
-        $clone->arrayCompositeValidators = $validators;
+        return new self($validators);
+    }
 
-        return $clone;
+    /**
+     * @param array<string, Validator> $valueValidators
+     */
+    public function withValueValidators(array $valueValidators): self
+    {
+        return new self($valueValidators);
     }
 
     public function build(): Validator
     {
-        if ($this->arrayCompositeValidators === null) {
-            throw new RuntimeException("No array composite validators have been configured");
+        if ($this->valueValidators === null) {
+            throw new RuntimeException("No value validators have been configured");
         }
 
         return new ChainValidator(
             [
                 TypeValidator::composite(),
-                new PropertyKeysValidator(array_keys($this->arrayCompositeValidators)),
-                new PropertyValuesValidator($this->arrayCompositeValidators),
+                new PropertyKeysValidator(array_keys($this->valueValidators)),
+                new PropertyValuesValidator($this->valueValidators),
             ],
         );
     }
