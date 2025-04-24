@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace LessValidator\ValidateResult;
+namespace LesValidator\ValidateResult;
 
 use JsonSerializable;
 

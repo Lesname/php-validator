@@ -1,11 +1,11 @@
 <?php
 declare(strict_types=1);
 
-namespace LessValidator;
+namespace LesValidator;
 
-use LessValidator\ValidateResult\ErrorValidateResult;
-use LessValidator\ValidateResult\ValidateResult;
-use LessValidator\ValidateResult\ValidValidateResult;
+use LesValidator\ValidateResult\ErrorValidateResult;
+use LesValidator\ValidateResult\ValidateResult;
+use LesValidator\ValidateResult\ValidValidateResult;
 use RuntimeException;
 
 /**

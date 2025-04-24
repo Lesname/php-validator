@@ -1,25 +1,23 @@
 <?php
 declare(strict_types=1);
 
-namespace LessValidatorTest\Builder;
+namespace LesValidatorTest\Builder;
 
-use A\B;
 use Throwable;
-use LessValidator\TypeValidator;
-use LessValidator\ChainValidator;
-use LessValidator\String\LengthValidator;
-use LessValidator\Builder\StringValidatorBuilder;
+use LesValidator\TypeValidator;
+use LesValidator\ChainValidator;
+use LesValidator\String\LengthValidator;
+use LesValidator\Builder\StringValidatorBuilder;
 use PHPUnit\Framework\TestCase;
 
 /**
- * @covers \LessValidator\Builder\StringValidatorBuilder
+ * @covers \LesValidator\Builder\StringValidatorBuilder
  */
 class StringValidatorBuilderTest extends TestCase
 {
     public function testBuild(): void
     {
-        $validator = StringValidatorBuilder
-            ::fromBetween(1, 5)
+        $validator = new StringValidatorBuilder(1, 5)
             ->build();
 
         self::assertEquals(

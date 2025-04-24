@@ -1,13 +1,13 @@
 <?php
 declare(strict_types=1);
 
-namespace LessValidator\String;
+namespace LesValidator\String;
 
 use RuntimeException;
-use LessValidator\ValidateResult\ErrorValidateResult;
-use LessValidator\ValidateResult\ValidateResult;
-use LessValidator\ValidateResult\ValidValidateResult;
-use LessValidator\Validator;
+use LesValidator\ValidateResult\ErrorValidateResult;
+use LesValidator\ValidateResult\ValidateResult;
+use LesValidator\ValidateResult\ValidValidateResult;
+use LesValidator\Validator;
 
 /**
  * @psalm-immutable

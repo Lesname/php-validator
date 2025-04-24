@@ -1,13 +1,13 @@
 <?php
 declare(strict_types=1);
 
-namespace LessValidatorTest\String;
+namespace LesValidatorTest\String;
 
-use LessValidator\String\LengthValidator;
+use LesValidator\String\LengthValidator;
 use PHPUnit\Framework\TestCase;
 
 /**
- * @covers \LessValidator\String\LengthValidator
+ * @covers \LesValidator\String\LengthValidator
  */
 final class LengthValidatorTest extends TestCase
 {

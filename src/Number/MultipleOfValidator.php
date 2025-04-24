@@ -1,12 +1,12 @@
 <?php
 declare(strict_types=1);
 
-namespace LessValidator\Number;
+namespace LesValidator\Number;
 
-use LessValidator\Validator;
-use LessValidator\ValidateResult\ValidateResult;
-use LessValidator\ValidateResult\ErrorValidateResult;
-use LessValidator\ValidateResult\ValidValidateResult;
+use LesValidator\Validator;
+use LesValidator\ValidateResult\ValidateResult;
+use LesValidator\ValidateResult\ErrorValidateResult;
+use LesValidator\ValidateResult\ValidValidateResult;
 
 /**
  * @psalm-immutable

@@ -1,27 +1,27 @@
 <?php
 declare(strict_types=1);
 
-namespace LessValidatorTest\Builder;
+namespace LesValidatorTest\Builder;
 
-use LessDocumentor\Type\Document\BoolTypeDocument;
-use LessDocumentor\Type\Document\Collection\Size;
-use LessValidator\Builder\TypeDocumentValidatorBuilder;
-use LessDocumentor\Type\Document\CollectionTypeDocument;
-use LessDocumentor\Type\Document\Composite\Property;
-use LessDocumentor\Type\Document\CompositeTypeDocument;
-use LessDocumentor\Type\Document\EnumTypeDocument;
-use LessDocumentor\Type\Document\Number\Range;
-use LessDocumentor\Type\Document\NumberTypeDocument;
-use LessDocumentor\Type\Document\String\Length;
-use LessDocumentor\Type\Document\StringTypeDocument;
-use LessDocumentor\Type\Document\TypeDocument;
-use LessValueObject\Enum\ContentType;
-use LessValueObject\String\Format\EmailAddress;
+use LesDocumentor\Type\Document\BoolTypeDocument;
+use LesDocumentor\Type\Document\Collection\Size;
+use LesValidator\Builder\TypeDocumentValidatorBuilder;
+use LesDocumentor\Type\Document\CollectionTypeDocument;
+use LesDocumentor\Type\Document\Composite\Property;
+use LesDocumentor\Type\Document\CompositeTypeDocument;
+use LesDocumentor\Type\Document\EnumTypeDocument;
+use LesDocumentor\Type\Document\Number\Range;
+use LesDocumentor\Type\Document\NumberTypeDocument;
+use LesDocumentor\Type\Document\String\Length;
+use LesDocumentor\Type\Document\StringTypeDocument;
+use LesDocumentor\Type\Document\TypeDocument;
+use LesValueObject\Enum\ContentType;
+use LesValueObject\String\Format\EmailAddress;
 use PHPUnit\Framework\TestCase;
 use Throwable;
 
 /**
- * @covers \LessValidator\Builder\TypeDocumentValidatorBuilder
+ * @covers \LesValidator\Builder\TypeDocumentValidatorBuilder
  */
 final class TypeDocumentValidatorBuilderTest extends TestCase
 {
@@ -101,8 +101,8 @@ final class TypeDocumentValidatorBuilderTest extends TestCase
     {
         $doc = new EnumTypeDocument(
             [
-                ContentType::Text->getValue(),
-                ContentType::Markdown->getValue(),
+                ContentType::Text->value,
+                ContentType::Markdown->value,
             ],
             null,
         );

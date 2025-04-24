@@ -1,13 +1,13 @@
 <?php
 declare(strict_types=1);
 
-namespace LessValidatorTest\Composite;
+namespace LesValidatorTest\Composite;
 
-use LessValidator\Composite\PropertyKeysValidator;
+use LesValidator\Composite\PropertyKeysValidator;
 use PHPUnit\Framework\TestCase;
 
 /**
- * @covers \LessValidator\Composite\PropertyKeysValidator
+ * @covers \LesValidator\Composite\PropertyKeysValidator
  */
 final class PropertyKeysValidatorTest extends TestCase
 {

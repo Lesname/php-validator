@@ -1,19 +1,18 @@
 <?php
 declare(strict_types=1);
 
-namespace LessValidatorTest\Composite;
+namespace LesValidatorTest\Composite;
 
-use LessValidator\Composite\RangeValidator;
+use LesValidator\Composite\RangeValidator;
 use PHPUnit\Framework\TestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 /**
- * @covers \LessValidator\Composite\RangeValidator
+ * @covers \LesValidator\Composite\RangeValidator
  */
 class RangeValidatorTest extends TestCase
 {
-    /**
-     * @dataProvider getValidInput
-     */
+    #[DataProvider('getValidInput')]
     public function testValid(mixed $input): void
     {
         self::assertTrue((new RangeValidator())->validate($input)->isValid());
@@ -47,9 +46,7 @@ class RangeValidatorTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider getInvalidInput
-     */
+    #[DataProvider('getInvalidInput')]
     public function testInvalid(mixed $input): void
     {
         self::assertFalse((new RangeValidator())->validate($input)->isValid());

@@ -1,15 +1,15 @@
 <?php
 declare(strict_types=1);
 
-namespace LessValidatorTest;
+namespace LesValidatorTest;
 
-use LessValidator\ChainValidator;
-use LessValidator\ValidateResult\ValidateResult;
-use LessValidator\Validator;
+use LesValidator\ChainValidator;
+use LesValidator\ValidateResult\ValidateResult;
+use LesValidator\Validator;
 use PHPUnit\Framework\TestCase;
 
 /**
- * @covers \LessValidator\ChainValidator
+ * @covers \LesValidator\ChainValidator
  */
 final class ChainValidatorTest extends TestCase
 {

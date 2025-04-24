@@ -1,13 +1,13 @@
 <?php
 declare(strict_types=1);
 
-namespace LessValidatorTest\ValidateResult;
+namespace LesValidatorTest\ValidateResult;
 
-use LessValidator\ValidateResult\ErrorValidateResult;
+use LesValidator\ValidateResult\ErrorValidateResult;
 use PHPUnit\Framework\TestCase;
 
 /**
- * @covers \LessValidator\ValidateResult\ErrorValidateResult
+ * @covers \LesValidator\ValidateResult\ErrorValidateResult
  */
 final class ErrorValidateResultTest extends TestCase
 {

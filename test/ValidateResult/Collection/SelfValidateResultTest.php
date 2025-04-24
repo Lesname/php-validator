@@ -1,14 +1,14 @@
 <?php
 declare(strict_types=1);
 
-namespace LessValidatorTest\ValidateResult\Collection;
+namespace LesValidatorTest\ValidateResult\Collection;
 
-use LessValidator\ValidateResult\Collection\SelfValidateResult;
-use LessValidator\ValidateResult\ValidateResult;
+use LesValidator\ValidateResult\Collection\SelfValidateResult;
+use LesValidator\ValidateResult\ValidateResult;
 use PHPUnit\Framework\TestCase;
 
 /**
- * @covers \LessValidator\ValidateResult\Collection\SelfValidateResult
+ * @covers \LesValidator\ValidateResult\Collection\SelfValidateResult
  */
 final class SelfValidateResultTest extends TestCase
 {

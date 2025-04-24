@@ -1,13 +1,13 @@
 <?php
 declare(strict_types=1);
 
-namespace LessValidatorTest\String;
+namespace LesValidatorTest\String;
 
-use LessValidator\String\OptionsValidator;
+use LesValidator\String\OptionsValidator;
 use PHPUnit\Framework\TestCase;
 
 /**
- * @covers \LessValidator\String\OptionsValidator
+ * @covers \LesValidator\String\OptionsValidator
  */
 final class OptionsValidatorTest extends TestCase
 {

@@ -1,32 +1,32 @@
 <?php
 declare(strict_types=1);
 
-namespace LessValidator\Builder;
+namespace LesValidator\Builder;
 
 use ReflectionClass;
 use RuntimeException;
-use LessValidator\Validator;
-use LessValidator\TypeValidator;
-use LessValidator\ChainValidator;
-use LessValidator\NullableValidator;
-use LessValidator\String\LengthValidator;
-use LessValidator\String\FormatValidator;
-use LessValidator\String\OptionsValidator;
-use LessValidator\Number\BetweenValidator;
-use LessValidator\Collection\SizeValidator;
-use LessValidator\Collection\ItemsValidator;
-use LessValidator\Number\MultipleOfValidator;
-use LessDocumentor\Type\Document\TypeDocument;
-use LessDocumentor\Type\Document\BoolTypeDocument;
-use LessDocumentor\Type\Document\EnumTypeDocument;
-use LessValidator\Composite\PropertyKeysValidator;
-use LessDocumentor\Type\Document\NumberTypeDocument;
-use LessDocumentor\Type\Document\StringTypeDocument;
-use LessValidator\Composite\PropertyValuesValidator;
-use LessDocumentor\Type\Document\CompositeTypeDocument;
-use LessDocumentor\Type\Document\CollectionTypeDocument;
-use LessValidator\Builder\Attribute\AdditionalValidator;
-use LessValueObject\String\Format\StringFormatValueObject;
+use LesValidator\Validator;
+use LesValidator\TypeValidator;
+use LesValidator\ChainValidator;
+use LesValidator\NullableValidator;
+use LesValidator\String\LengthValidator;
+use LesValidator\String\FormatValidator;
+use LesValidator\String\OptionsValidator;
+use LesValidator\Number\BetweenValidator;
+use LesValidator\Collection\SizeValidator;
+use LesValidator\Collection\ItemsValidator;
+use LesValidator\Number\MultipleOfValidator;
+use LesDocumentor\Type\Document\TypeDocument;
+use LesDocumentor\Type\Document\BoolTypeDocument;
+use LesDocumentor\Type\Document\EnumTypeDocument;
+use LesValidator\Composite\PropertyKeysValidator;
+use LesDocumentor\Type\Document\NumberTypeDocument;
+use LesDocumentor\Type\Document\StringTypeDocument;
+use LesValidator\Composite\PropertyValuesValidator;
+use LesDocumentor\Type\Document\CompositeTypeDocument;
+use LesDocumentor\Type\Document\CollectionTypeDocument;
+use LesValidator\Builder\Attribute\AdditionalValidator;
+use LesValueObject\String\Format\StringFormatValueObject;
 
 /**
  * @psalm-immutable

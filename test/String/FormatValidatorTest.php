@@ -1,15 +1,15 @@
 <?php
 declare(strict_types=1);
 
-namespace LessValidatorTest\String;
+namespace LesValidatorTest\String;
 
-use LessValidator\String\FormatValidator;
-use LessValidator\ValidateResult\ErrorValidateResult;
-use LessValueObject\String\Format\EmailAddress;
+use LesValidator\String\FormatValidator;
+use LesValidator\ValidateResult\ErrorValidateResult;
+use LesValueObject\String\Format\EmailAddress;
 use PHPUnit\Framework\TestCase;
 
 /**
- * @covers \LessValidator\String\FormatValidator
+ * @covers \LesValidator\String\FormatValidator
  */
 final class FormatValidatorTest extends TestCase
 {

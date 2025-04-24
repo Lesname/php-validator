@@ -1,15 +1,15 @@
 <?php
 declare(strict_types=1);
 
-namespace LessValidatorTest\Composite;
+namespace LesValidatorTest\Composite;
 
-use LessValidator\Composite\PropertyValuesValidator;
-use LessValidator\ValidateResult\ValidateResult;
-use LessValidator\Validator;
+use LesValidator\Composite\PropertyValuesValidator;
+use LesValidator\ValidateResult\ValidateResult;
+use LesValidator\Validator;
 use PHPUnit\Framework\TestCase;
 
 /**
- * @covers \LessValidator\Composite\PropertyValuesValidator
+ * @covers \LesValidator\Composite\PropertyValuesValidator
  */
 final class PropertyValuesValidatorTest extends TestCase
 {

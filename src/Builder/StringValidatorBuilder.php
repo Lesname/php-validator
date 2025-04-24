@@ -1,13 +1,13 @@
 <?php
 declare(strict_types=1);
 
-namespace LessValidator\Builder;
+namespace LesValidator\Builder;
 
 use RuntimeException;
-use LessValidator\Validator;
-use LessValidator\TypeValidator;
-use LessValidator\ChainValidator;
-use LessValidator\String\LengthValidator;
+use LesValidator\Validator;
+use LesValidator\TypeValidator;
+use LesValidator\ChainValidator;
+use LesValidator\String\LengthValidator;
 
 /**
  * @psalm-immutable
@@ -18,14 +18,6 @@ final class StringValidatorBuilder implements ValidatorBuilder
         private readonly ?int $minLength = null,
         private readonly ?int $maxLength = null,
     ) {}
-
-    /**
-     * @deprecated use constructor
-     */
-    public static function fromBetween(int $minLength, int $maxLength): self
-    {
-        return new self($minLength, $maxLength);
-    }
 
     public function getMinLength(): ?int
     {

@@ -1,9 +1,9 @@
 <?php
 declare(strict_types=1);
 
-namespace LessValidator\Builder;
+namespace LesValidator\Builder;
 
-use LessValidator\Validator;
+use LesValidator\Validator;
 
 /**
  * @psalm-immutable
