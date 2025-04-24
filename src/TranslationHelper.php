@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace LessValidator;
+namespace LesValidator;
 
 final class TranslationHelper
 {

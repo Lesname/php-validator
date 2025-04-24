@@ -1,15 +1,15 @@
 <?php
 declare(strict_types=1);
 
-namespace LessValidatorTest\Collection;
+namespace LesValidatorTest\Collection;
 
-use LessValidator\Collection\ItemsValidator;
-use LessValidator\ValidateResult\ValidateResult;
-use LessValidator\Validator;
+use LesValidator\Collection\ItemsValidator;
+use LesValidator\ValidateResult\ValidateResult;
+use LesValidator\Validator;
 use PHPUnit\Framework\TestCase;
 
 /**
- * @covers \LessValidator\Collection\ItemsValidator
+ * @covers \LesValidator\Collection\ItemsValidator
  */
 final class ItemsValidatorTest extends TestCase
 {

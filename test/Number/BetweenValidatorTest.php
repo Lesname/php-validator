@@ -1,13 +1,13 @@
 <?php
 declare(strict_types=1);
 
-namespace LessValidatorTest\Number;
+namespace LesValidatorTest\Number;
 
-use LessValidator\Number\BetweenValidator;
+use LesValidator\Number\BetweenValidator;
 use PHPUnit\Framework\TestCase;
 
 /**
- * @covers \LessValidator\Number\BetweenValidator
+ * @covers \LesValidator\Number\BetweenValidator
  */
 final class BetweenValidatorTest extends TestCase
 {

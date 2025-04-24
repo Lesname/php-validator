@@ -1,14 +1,14 @@
 <?php
 declare(strict_types=1);
 
-namespace LessValidatorTest\ValidateResult\Collection;
+namespace LesValidatorTest\ValidateResult\Collection;
 
-use LessValidator\ValidateResult\Collection\ItemsValidateResult;
-use LessValidator\ValidateResult\ValidateResult;
+use LesValidator\ValidateResult\Collection\ItemsValidateResult;
+use LesValidator\ValidateResult\ValidateResult;
 use PHPUnit\Framework\TestCase;
 
 /**
- * @covers \LessValidator\ValidateResult\Collection\ItemsValidateResult
+ * @covers \LesValidator\ValidateResult\Collection\ItemsValidateResult
  */
 final class ItemsValidateResultTest extends TestCase
 {

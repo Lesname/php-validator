@@ -1,14 +1,14 @@
 <?php
 declare(strict_types=1);
 
-namespace LessValidatorTest;
+namespace LesValidatorTest;
 
-use LessValidator\TypeValidator;
+use LesValidator\TypeValidator;
 use PHPUnit\Framework\TestCase;
 use Throwable;
 
 /**
- * @covers \LessValidator\TypeValidator
+ * @covers \LesValidator\TypeValidator
  */
 final class TypeValidatorTest extends TestCase
 {

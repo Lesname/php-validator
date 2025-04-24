@@ -1,10 +1,10 @@
 <?php
 declare(strict_types=1);
 
-namespace LessValidator\Builder\Attribute;
+namespace LesValidator\Builder\Attribute;
 
 use Attribute;
-use LessValidator\Validator;
+use LesValidator\Validator;
 
 #[Attribute(Attribute::IS_REPEATABLE | Attribute::TARGET_CLASS)]
 final class AdditionalValidator

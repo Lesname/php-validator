@@ -1,13 +1,13 @@
 <?php
 declare(strict_types=1);
 
-namespace LessValidator\Builder;
+namespace LesValidator\Builder;
 
 use RuntimeException;
-use LessValidator\Validator;
-use LessValidator\TypeValidator;
-use LessValidator\ChainValidator;
-use LessValidator\Number\BetweenValidator;
+use LesValidator\Validator;
+use LesValidator\TypeValidator;
+use LesValidator\ChainValidator;
+use LesValidator\Number\BetweenValidator;
 
 /**
  * @psalm-immutable
@@ -19,14 +19,6 @@ final class NumericValidatorBuilder implements ValidatorBuilder
         private readonly float|int|null $minimal = null,
         private readonly float|int|null $maximal = null,
     ) {}
-
-    /**
-     * @deprecated use constructor
-     */
-    public static function fromBetween(float|int $minimal, float|int $maximal): self
-    {
-        return (new self())->withBetween($minimal, $maximal);
-    }
 
     public function isOnlyIntegers(): bool
     {

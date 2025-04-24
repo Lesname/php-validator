@@ -1,15 +1,15 @@
 <?php
 declare(strict_types=1);
 
-namespace LessValidatorTest;
+namespace LesValidatorTest;
 
-use LessValidator\NullableValidator;
-use LessValidator\ValidateResult\ValidateResult;
-use LessValidator\Validator;
+use LesValidator\NullableValidator;
+use LesValidator\ValidateResult\ValidateResult;
+use LesValidator\Validator;
 use PHPUnit\Framework\TestCase;
 
 /**
- * @covers \LessValidator\NullableValidator
+ * @covers \LesValidator\NullableValidator
  */
 final class NullableValidatorTest extends TestCase
 {

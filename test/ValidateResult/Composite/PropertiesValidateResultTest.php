@@ -1,14 +1,14 @@
 <?php
 declare(strict_types=1);
 
-namespace LessValidatorTest\ValidateResult\Composite;
+namespace LesValidatorTest\ValidateResult\Composite;
 
-use LessValidator\ValidateResult\Composite\PropertiesValidateResult;
-use LessValidator\ValidateResult\ValidateResult;
+use LesValidator\ValidateResult\Composite\PropertiesValidateResult;
+use LesValidator\ValidateResult\ValidateResult;
 use PHPUnit\Framework\TestCase;
 
 /**
- * @covers \LessValidator\ValidateResult\Composite\PropertiesValidateResult
+ * @covers \LesValidator\ValidateResult\Composite\PropertiesValidateResult
  */
 final class PropertiesValidateResultTest extends TestCase
 {

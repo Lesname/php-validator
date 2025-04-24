@@ -1,23 +1,22 @@
 <?php
 declare(strict_types=1);
 
-namespace LessValidatorTest\Builder;
+namespace LesValidatorTest\Builder;
 
-use LessValidator\TypeValidator;
-use LessValidator\ChainValidator;
-use LessValidator\Number\BetweenValidator;
-use LessValidator\Builder\NumericValidatorBuilder;
+use LesValidator\TypeValidator;
+use LesValidator\ChainValidator;
+use LesValidator\Number\BetweenValidator;
+use LesValidator\Builder\NumericValidatorBuilder;
 use PHPUnit\Framework\TestCase;
 
 /**
- * @covers \LessValidator\Builder\NumericValidatorBuilder
+ * @covers \LesValidator\Builder\NumericValidatorBuilder
  */
 class NumericValidatorBuilderTest extends TestCase
 {
     public function testBasicBuild(): void
     {
-        $validator = NumericValidatorBuilder
-            ::fromBetween(1, 3.5)
+        $validator = new NumericValidatorBuilder(false, 1, 3.5)
             ->build();
 
         self::assertEquals(
@@ -33,8 +32,7 @@ class NumericValidatorBuilderTest extends TestCase
 
     public function testOnlyIntegers(): void
     {
-        $validator = NumericValidatorBuilder
-            ::fromBetween(5, 9.1)
+        $validator = new NumericValidatorBuilder(false, 5, 9.1)
             ->withOnlyIntegers()
             ->build();
 

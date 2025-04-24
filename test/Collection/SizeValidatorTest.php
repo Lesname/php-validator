@@ -1,13 +1,13 @@
 <?php
 declare(strict_types=1);
 
-namespace LessValidatorTest\Collection;
+namespace LesValidatorTest\Collection;
 
-use LessValidator\Collection\SizeValidator;
+use LesValidator\Collection\SizeValidator;
 use PHPUnit\Framework\TestCase;
 
 /**
- * @covers \LessValidator\Collection\SizeValidator
+ * @covers \LesValidator\Collection\SizeValidator
  */
 final class SizeValidatorTest extends TestCase
 {

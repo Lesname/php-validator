@@ -1,20 +1,17 @@
 <?php
 declare(strict_types=1);
 
-namespace LessValidatorTest\Number;
+namespace LesValidatorTest\Number;
 
-use LessValidator\Number\PrecisionValidator;
-use LessValidator\Number\MultipleOfValidator;
+use LesValidator\Number\MultipleOfValidator;
 use PHPUnit\Framework\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 
-/**
- * @covers \LessValidator\Number\MultipleOfValidator
- */
+#[CoversClass(\LesValidator\Number\MultipleOfValidator::class)]
 class MultipleOfValidatorTest extends TestCase
 {
-    /**
-     * @dataProvider getValidData
-     */
+    #[DataProvider('getValidData')]
     public function testValidate(int|float $multipleOf, int|float $value): void
     {
         $validator = new MultipleOfValidator($multipleOf);

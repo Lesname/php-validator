@@ -1,9 +1,9 @@
 <?php
 declare(strict_types=1);
 
-namespace LessValidator\ValidateResult\Collection;
+namespace LesValidator\ValidateResult\Collection;
 
-use LessValidator\ValidateResult\ValidateResult;
+use LesValidator\ValidateResult\ValidateResult;
 
 /**
  * @psalm-immutable
