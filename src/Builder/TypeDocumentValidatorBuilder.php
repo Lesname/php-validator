@@ -67,7 +67,12 @@ final class TypeDocumentValidatorBuilder implements ValidatorBuilder
             ),
             $typeDocument instanceof NumberTypeDocument => $this->buildFromNumberDocument($typeDocument),
             $typeDocument instanceof StringTypeDocument => $this->buildFromStringDocument($typeDocument),
-            default => throw new RuntimeException(),
+            default => throw new RuntimeException(
+                sprintf(
+                    'Type "%s" is not supported',
+                    $typeDocument::class,
+                ),
+            ),
         };
 
         $additionalValidators = $this->getAdditionalValidators($typeDocument);
