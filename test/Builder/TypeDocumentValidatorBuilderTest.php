@@ -5,6 +5,7 @@ namespace LesValidatorTest\Builder;
 
 use LesDocumentor\Type\Document\BoolTypeDocument;
 use LesDocumentor\Type\Document\Collection\Size;
+use LesDocumentor\Type\Document\Composite\Key\AnyKey;
 use LesValidator\Builder\TypeDocumentValidatorBuilder;
 use LesDocumentor\Type\Document\CollectionTypeDocument;
 use LesDocumentor\Type\Document\Composite\Property;
@@ -19,6 +20,8 @@ use LesValueObject\Enum\ContentType;
 use LesValueObject\String\Format\EmailAddress;
 use PHPUnit\Framework\TestCase;
 use Throwable;
+use LesDocumentor\Type\Document\Composite\Key\ExactKey;
+use LesDocumentor\Type\Document\Composite\Key\RegexKey;
 
 /**
  * @covers \LesValidator\Builder\TypeDocumentValidatorBuilder
@@ -55,11 +58,12 @@ final class TypeDocumentValidatorBuilderTest extends TestCase
         self::assertFalse($validator->validate([true, true, true])->isValid());
     }
 
-    public function testFromCompositeDocument(): void
+    public function testFromCompositeDocumentExactKey(): void
     {
         $doc = new CompositeTypeDocument(
             [
-                'foo' => new Property(
+                new Property(
+                    new ExactKey('foo'),
                     new BoolTypeDocument(null),
                 ),
             ],
@@ -75,11 +79,60 @@ final class TypeDocumentValidatorBuilderTest extends TestCase
         self::assertFalse($validator->validate(['foo' => 1])->isValid());
     }
 
+    public function testFromCompositeDocumentAnyKey(): void
+    {
+        $doc = new CompositeTypeDocument(
+            [
+                new Property(
+                    new AnyKey(),
+                    new BoolTypeDocument(null),
+                ),
+            ],
+        );
+
+        $validator = (new TypeDocumentValidatorBuilder($doc))
+            ->build();
+
+        self::assertTrue($validator->validate(['foo' => true])->isValid());
+        self::assertTrue($validator->validate(['bar' => false])->isValid());
+        self::assertTrue($validator->validate(['foo' => true, 'bar' => true])->isValid());
+        self::assertTrue($validator->validate([])->isValid());
+
+        self::assertFalse($validator->validate(null)->isValid());
+        self::assertFalse($validator->validate(['foo' => 1])->isValid());
+    }
+
+
+    public function testFromCompositeDocumentRegexKey(): void
+    {
+        $doc = new CompositeTypeDocument(
+            [
+                new Property(
+                    new RegexKey('^f'),
+                    new BoolTypeDocument(null),
+                ),
+            ],
+        );
+
+        $validator = (new TypeDocumentValidatorBuilder($doc))
+            ->build();
+
+        self::assertTrue($validator->validate(['foo' => true])->isValid());
+        self::assertTrue($validator->validate(['fiz' => false])->isValid());
+        self::assertTrue($validator->validate(['foo' => false, 'fiz' => true])->isValid());
+        self::assertTrue($validator->validate([])->isValid());
+
+        self::assertFalse($validator->validate(null)->isValid());
+        self::assertFalse($validator->validate(['foo' => false, 'bar' => false])->isValid());
+        self::assertFalse($validator->validate(['foo' => 1])->isValid());
+    }
+
     public function testFromCompositeDocumentAllowAdditionalProperties(): void
     {
         $doc = new CompositeTypeDocument(
             [
-                'foo' => new Property(
+                new Property(
+                    new ExactKey('foo'),
                     new BoolTypeDocument(null),
                 ),
             ],
