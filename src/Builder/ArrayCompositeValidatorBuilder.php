@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace LesValidator\Builder;
 
+use Override;
 use RuntimeException;
 use LesValidator\Validator;
 use LesValidator\TypeValidator;
@@ -37,6 +38,7 @@ final class ArrayCompositeValidatorBuilder implements ValidatorBuilder
         return new self($valueValidators);
     }
 
+    #[Override]
     public function build(): Validator
     {
         if ($this->valueValidators === null) {

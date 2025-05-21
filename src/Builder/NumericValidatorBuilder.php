@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace LesValidator\Builder;
 
+use Override;
 use RuntimeException;
 use LesValidator\Validator;
 use LesValidator\TypeValidator;
@@ -55,6 +56,7 @@ final class NumericValidatorBuilder implements ValidatorBuilder
         return new self($onlyIntegers, $this->minimal, $this->maximal);
     }
 
+    #[Override]
     public function build(): Validator
     {
         if ($this->minimal === null) {

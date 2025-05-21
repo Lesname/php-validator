@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace LesValidator\ValidateResult\Collection;
 
+use Override;
 use LesValidator\ValidateResult\ValidateResult;
 
 /**
@@ -32,6 +33,7 @@ final class ItemsValidateResult implements ValidateResult
         $this->valid = $valid;
     }
 
+    #[Override]
     public function isValid(): bool
     {
         return $this->valid;
@@ -40,6 +42,7 @@ final class ItemsValidateResult implements ValidateResult
     /**
      * @return array<mixed>
      */
+    #[Override]
     public function jsonSerialize(): array
     {
         return ['items' => $this->items];

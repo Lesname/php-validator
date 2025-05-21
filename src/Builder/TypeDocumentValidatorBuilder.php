@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace LesValidator\Builder;
 
+use Override;
 use ReflectionClass;
 use RuntimeException;
 use LesValidator\Validator;
@@ -17,6 +18,7 @@ use LesValidator\Collection\SizeValidator;
 use LesValidator\Collection\ItemsValidator;
 use LesValidator\Number\MultipleOfValidator;
 use LesDocumentor\Type\Document\TypeDocument;
+use LesValidator\Composite\PropertyValidator;
 use LesDocumentor\Type\Document\BoolTypeDocument;
 use LesDocumentor\Type\Document\EnumTypeDocument;
 use LesValidator\Composite\PropertyKeysValidator;
@@ -26,6 +28,7 @@ use LesValidator\Composite\PropertyValuesValidator;
 use LesDocumentor\Type\Document\CompositeTypeDocument;
 use LesDocumentor\Type\Document\CollectionTypeDocument;
 use LesValidator\Builder\Attribute\AdditionalValidator;
+use LesDocumentor\Type\Document\Composite\Key\ExactKey;
 use LesValueObject\String\Format\StringFormatValueObject;
 
 /**
@@ -45,6 +48,7 @@ final class TypeDocumentValidatorBuilder implements ValidatorBuilder
      * @psalm-suppress ImpureMethodCall
      * @psalm-suppress ImpureFunctionCall
      */
+    #[Override]
     public function build(): Validator
     {
         if ($this->typeDocument === null) {
@@ -127,14 +131,21 @@ final class TypeDocumentValidatorBuilder implements ValidatorBuilder
     {
         $validators = [TypeValidator::composite()];
 
-        if ($typeDocument->allowExtraProperties === false) {
-            $validators[] = new PropertyKeysValidator(array_keys($typeDocument->properties));
+        $propertyValidators = [];
+        $keys = [];
+
+        foreach ($typeDocument->properties as $property) {
+            $keys[] = $property->key;
+
+            if ($property->key instanceof ExactKey) {
+                $propertyValidators[$property->key->value] = $this->withTypeDocument($property->type)->build();
+            } else {
+                $validators[] = new PropertyValidator($property->key, $this->withTypeDocument($property->type)->build());
+            }
         }
 
-        $propertyValidators = [];
-
-        foreach ($typeDocument->properties as $key => $property) {
-            $propertyValidators[$key] = $this->withTypeDocument($property->type)->build();
+        if ($typeDocument->allowExtraProperties === false) {
+            $validators[] = new PropertyKeysValidator($keys);
         }
 
         return new ChainValidator(

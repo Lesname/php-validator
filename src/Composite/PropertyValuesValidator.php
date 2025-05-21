@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace LesValidator\Composite;
 
+use Override;
 use LesValidator\ValidateResult\Composite\PropertiesValidateResult;
 use LesValidator\ValidateResult\ValidateResult;
 use LesValidator\Validator;
@@ -27,6 +28,7 @@ final class PropertyValuesValidator implements Validator
         $this->propertyValueValidators = $propertyValueValidatorsArray;
     }
 
+    #[Override]
     public function validate(mixed $input): ValidateResult
     {
         assert(is_array($input));

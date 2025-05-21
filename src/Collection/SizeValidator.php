@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace LesValidator\Collection;
 
+use Override;
 use LesValidator\ValidateResult\ErrorValidateResult;
 use LesValidator\ValidateResult\ValidateResult;
 use LesValidator\ValidateResult\ValidValidateResult;
@@ -17,6 +18,7 @@ final class SizeValidator implements Validator
     public function __construct(public readonly ?int $minSize, public readonly ?int $maxSize)
     {}
 
+    #[Override]
     public function validate(mixed $input): ValidateResult
     {
         assert(is_array($input));

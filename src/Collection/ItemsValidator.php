@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace LesValidator\Collection;
 
+use Override;
 use LesValidator\ValidateResult\Collection\ItemsValidateResult;
 use LesValidator\ValidateResult\ValidateResult;
 use LesValidator\Validator;
@@ -16,6 +17,7 @@ final class ItemsValidator implements Validator
     {
     }
 
+    #[Override]
     public function validate(mixed $input): ValidateResult
     {
         assert(is_array($input));

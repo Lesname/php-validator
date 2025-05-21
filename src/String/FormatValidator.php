@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace LesValidator\String;
 
+use Override;
 use LesValidator\ValidateResult\ErrorValidateResult;
 use LesValidator\ValidateResult\ValidateResult;
 use LesValidator\ValidateResult\ValidValidateResult;
@@ -20,6 +21,7 @@ final class FormatValidator implements Validator
     public function __construct(public readonly string $format)
     {}
 
+    #[Override]
     public function validate(mixed $input): ValidateResult
     {
         assert(is_string($input));

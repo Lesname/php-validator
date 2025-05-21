@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace LesValidator\Composite;
 
+use Override;
 use LesValidator\Validator;
 use LesValidator\ValidateResult\ValidateResult;
 use LesValidator\ValidateResult\ValidValidateResult;
@@ -19,6 +20,7 @@ final class RangeValidator implements Validator
         private readonly string $maxKey = 'max',
     ) {}
 
+    #[Override]
     public function validate(mixed $input): ValidateResult
     {
         assert(is_array($input));
