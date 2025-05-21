@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace LesValidator\Composite;
 
+use Override;
+use LesDocumentor\Type\Document\Composite\Key\Key;
 use LesValidator\ValidateResult\ErrorValidateResult;
 use LesValidator\ValidateResult\ValidateResult;
 use LesValidator\ValidateResult\ValidValidateResult;
@@ -14,36 +16,53 @@ use LesValidator\ValidateResult\Composite\SelfValidateResult;
  */
 final class PropertyKeysValidator implements Validator
 {
-    /** @var array<string> */
-    public readonly array $keys;
+    /**
+     * @param array<string|Key> $keys
+     */
+    public function __construct(private readonly array $keys)
+    {}
 
-    /** @param iterable<int, string> $keys */
-    public function __construct(iterable $keys)
-    {
-        $keysArray = [];
-
-        foreach ($keys as $key) {
-            $keysArray[] = $key;
-        }
-
-        $this->keys = $keysArray;
-    }
-
+    #[Override]
     public function validate(mixed $input): ValidateResult
     {
         assert(is_array($input));
 
-        $diff = array_diff(array_keys($input), $this->keys);
+        $extra = [];
 
-        if (count($diff) > 0) {
+        foreach (array_keys($input) as $key) {
+            if (!$this->isKeyAllowed($key)) {
+                $extra[] = $key;
+            }
+        }
+
+        if (count($extra) > 0) {
             return new SelfValidateResult(
                 new ErrorValidateResult(
                     'composite.keysNotAllowed',
-                    ['extra' => array_values($diff)],
+                    ['extra' => $extra],
                 ),
             );
         }
 
         return new ValidValidateResult();
+    }
+
+    private function isKeyAllowed(mixed $key): bool
+    {
+        if (!is_string($key)) {
+            return false;
+        }
+
+        foreach ($this->keys as $allowedKey) {
+            if ($allowedKey instanceof Key) {
+                if ($allowedKey->matches($key)) {
+                    return true;
+                }
+            } elseif ($allowedKey === $key) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }
