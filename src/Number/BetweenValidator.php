@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace LesValidator\Number;
 
+use Override;
 use LesValidator\ValidateResult\ErrorValidateResult;
 use LesValidator\ValidateResult\ValidateResult;
 use LesValidator\ValidateResult\ValidValidateResult;
@@ -18,6 +19,7 @@ final class BetweenValidator implements Validator
         public readonly float | int | null $maximal,
     ) {}
 
+    #[Override]
     public function validate(mixed $input): ValidateResult
     {
         assert(is_float($input) || is_int($input));

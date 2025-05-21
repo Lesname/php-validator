@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace LesValidator\Builder;
 
+use Override;
 use RuntimeException;
 use LesValidator\Validator;
 use LesValidator\TypeValidator;
@@ -44,6 +45,7 @@ final class StringValidatorBuilder implements ValidatorBuilder
         return new self($this->minLength, $maxLength);
     }
 
+    #[Override]
     public function build(): Validator
     {
         if ($this->minLength === null) {

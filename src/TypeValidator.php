@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace LesValidator;
 
+use Override;
 use LesValidator\ValidateResult\ErrorValidateResult;
 use LesValidator\ValidateResult\ValidateResult;
 use LesValidator\ValidateResult\ValidValidateResult;
@@ -74,6 +75,7 @@ final class TypeValidator implements Validator
         return new self(self::STRING);
     }
 
+    #[Override]
     public function validate(mixed $input): ValidateResult
     {
         $valid = match ($this->type) {

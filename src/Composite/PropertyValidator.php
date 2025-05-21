@@ -26,6 +26,7 @@ final class PropertyValidator implements Validator
 
         $propertyResults = [];
 
+        /** @psalm-suppress MixedAssignment */
         foreach ($input as $key => $value) {
             if (is_string($key) && $this->key->matches($key)) {
                 $propertyResults[$key] = $this->validator->validate($value);

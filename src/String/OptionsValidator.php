@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace LesValidator\String;
 
+use Override;
 use LesValidator\ValidateResult\ErrorValidateResult;
 use LesValidator\ValidateResult\ValidateResult;
 use LesValidator\ValidateResult\ValidValidateResult;
@@ -28,6 +29,7 @@ final class OptionsValidator implements Validator
         $this->options = $arrayOptions;
     }
 
+    #[Override]
     public function validate(mixed $input): ValidateResult
     {
         if (in_array($input, $this->options, true)) {

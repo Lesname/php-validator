@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace LesValidator;
 
+use Override;
 use LesValidator\ValidateResult\ValidateResult;
 use LesValidator\ValidateResult\ValidValidateResult;
 
@@ -31,6 +32,7 @@ final class ChainValidator implements Validator
         return new self($validators);
     }
 
+    #[Override]
     public function validate(mixed $input): ValidateResult
     {
         foreach ($this->validators as $validator) {

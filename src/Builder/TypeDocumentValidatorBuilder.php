@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace LesValidator\Builder;
 
+use Override;
 use ReflectionClass;
 use RuntimeException;
 use LesValidator\Validator;
@@ -47,6 +48,7 @@ final class TypeDocumentValidatorBuilder implements ValidatorBuilder
      * @psalm-suppress ImpureMethodCall
      * @psalm-suppress ImpureFunctionCall
      */
+    #[Override]
     public function build(): Validator
     {
         if ($this->typeDocument === null) {

@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace LesValidator\Number;
 
+use Override;
 use LesValidator\Validator;
 use LesValidator\ValidateResult\ValidateResult;
 use LesValidator\ValidateResult\ErrorValidateResult;
@@ -18,6 +19,7 @@ final class MultipleOfValidator implements Validator
         assert($multipleOf > 0, "Multiple of must be >0, gotten '{$multipleOf}'");
     }
 
+    #[Override]
     public function validate(mixed $input): ValidateResult
     {
         assert(is_float($input) || is_int($input));

@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace LesValidator\ValidateResult;
 
 use stdClass;
+use Override;
 
 /**
  * @psalm-immutable
@@ -19,6 +20,7 @@ final class ErrorValidateResult implements ValidateResult
         public readonly array $context = [],
     ) {}
 
+    #[Override]
     public function isValid(): bool
     {
         return false;
@@ -27,6 +29,7 @@ final class ErrorValidateResult implements ValidateResult
     /**
      * @return array<mixed>
      */
+    #[Override]
     public function jsonSerialize(): array
     {
         return [

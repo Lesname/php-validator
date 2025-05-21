@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace LesValidator\String;
 
+use Override;
 use RuntimeException;
 use LesValidator\ValidateResult\ErrorValidateResult;
 use LesValidator\ValidateResult\ValidateResult;
@@ -19,6 +20,7 @@ final class LengthValidator implements Validator
         public readonly ?int $maxLength,
     ) {}
 
+    #[Override]
     public function validate(mixed $input): ValidateResult
     {
         assert(is_string($input));
