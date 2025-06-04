@@ -50,6 +50,7 @@ final class TypeDocumentValidatorBuilder implements ValidatorBuilder
     /**
      * @psalm-suppress ImpureMethodCall
      * @psalm-suppress ImpureFunctionCall
+     * @psalm-suppress DeprecatedMethod
      */
     #[Override]
     public function build(): Validator
@@ -89,6 +90,7 @@ final class TypeDocumentValidatorBuilder implements ValidatorBuilder
             $validator = new ChainValidator([$validator, ...$additionalValidators]);
         }
 
+        /** @phpstan-ignore method.deprecated */
         return $typeDocument->isNullable()
             ? new NullableValidator($validator)
             : $validator;
@@ -212,6 +214,7 @@ final class TypeDocumentValidatorBuilder implements ValidatorBuilder
     private function buildFromUnionTypeDocument(UnionTypeDocument $typeDocument): Validator
     {
         $subValidators = [];
+        /** @phpstan-ignore method.deprecated */
         $nullable = $typeDocument->isNullable();
 
         foreach ($typeDocument->subTypes as $subType) {
