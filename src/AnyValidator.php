@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace LesValidator;
 
+use Override;
 use LesValidator\ValidateResult\ValidateResult;
 use LesValidator\ValidateResult\AnyValidateResult;
 
@@ -26,6 +27,7 @@ final class AnyValidator implements Validator
         $this->subValidators = $validatorsArray;
     }
 
+    #[Override]
     public function validate(mixed $input): ValidateResult
     {
         $results = [];

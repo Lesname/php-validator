@@ -7,6 +7,7 @@ use Override;
 use ReflectionClass;
 use RuntimeException;
 use LesValidator\Validator;
+use LesValidator\AnyValidator;
 use LesValidator\TypeValidator;
 use LesValidator\ChainValidator;
 use LesValidator\NullableValidator;
@@ -22,6 +23,8 @@ use LesValidator\Composite\PropertyValidator;
 use LesDocumentor\Type\Document\BoolTypeDocument;
 use LesDocumentor\Type\Document\EnumTypeDocument;
 use LesValidator\Composite\PropertyKeysValidator;
+use LesDocumentor\Type\Document\NullTypeDocument;
+use LesDocumentor\Type\Document\UnionTypeDocument;
 use LesDocumentor\Type\Document\NumberTypeDocument;
 use LesDocumentor\Type\Document\StringTypeDocument;
 use LesValidator\Composite\PropertyValuesValidator;
@@ -59,8 +62,8 @@ final class TypeDocumentValidatorBuilder implements ValidatorBuilder
 
         $validator = match (true) {
             $typeDocument instanceof BoolTypeDocument => TypeValidator::boolean(),
-            $typeDocument instanceof CollectionTypeDocument => $this->buildFromCollectionDocument($typeDocument),
-            $typeDocument instanceof CompositeTypeDocument => $this->buildFromCompositeDocument($typeDocument),
+            $typeDocument instanceof CollectionTypeDocument => $this->buildFromCollectionTypeDocument($typeDocument),
+            $typeDocument instanceof CompositeTypeDocument => $this->buildFromCompositeTypeDocument($typeDocument),
             $typeDocument instanceof EnumTypeDocument => new ChainValidator(
                 [
                     TypeValidator::string(),
@@ -69,8 +72,9 @@ final class TypeDocumentValidatorBuilder implements ValidatorBuilder
                     ),
                 ],
             ),
-            $typeDocument instanceof NumberTypeDocument => $this->buildFromNumberDocument($typeDocument),
-            $typeDocument instanceof StringTypeDocument => $this->buildFromStringDocument($typeDocument),
+            $typeDocument instanceof NumberTypeDocument => $this->buildFromNumberTypeDocument($typeDocument),
+            $typeDocument instanceof StringTypeDocument => $this->buildFromStringTypeDocument($typeDocument),
+            $typeDocument instanceof UnionTypeDocument => $this->buildFromUnionTypeDocument($typeDocument),
             default => throw new RuntimeException(
                 sprintf(
                     'Type "%s" is not supported',
@@ -114,7 +118,7 @@ final class TypeDocumentValidatorBuilder implements ValidatorBuilder
         return $additionalValidators;
     }
 
-    private function buildFromCollectionDocument(CollectionTypeDocument $typeDocument): Validator
+    private function buildFromCollectionTypeDocument(CollectionTypeDocument $typeDocument): Validator
     {
         $chained = [TypeValidator::collection()];
 
@@ -127,7 +131,7 @@ final class TypeDocumentValidatorBuilder implements ValidatorBuilder
         return new ChainValidator($chained);
     }
 
-    private function buildFromCompositeDocument(CompositeTypeDocument $typeDocument): Validator
+    private function buildFromCompositeTypeDocument(CompositeTypeDocument $typeDocument): Validator
     {
         $validators = [TypeValidator::composite()];
 
@@ -156,7 +160,7 @@ final class TypeDocumentValidatorBuilder implements ValidatorBuilder
         );
     }
 
-    private function buildFromStringDocument(StringTypeDocument $typeDocument): Validator
+    private function buildFromStringTypeDocument(StringTypeDocument $typeDocument): Validator
     {
         $validators = [TypeValidator::string()];
 
@@ -173,7 +177,7 @@ final class TypeDocumentValidatorBuilder implements ValidatorBuilder
         return new ChainValidator($validators);
     }
 
-    private function buildFromNumberDocument(NumberTypeDocument $typeDocument): Validator
+    private function buildFromNumberTypeDocument(NumberTypeDocument $typeDocument): Validator
     {
         if (is_int($typeDocument->multipleOf)) {
             $validators = [TypeValidator::integer()];
@@ -193,5 +197,29 @@ final class TypeDocumentValidatorBuilder implements ValidatorBuilder
         }
 
         return new ChainValidator($validators);
+    }
+
+    private function buildFromUnionTypeDocument(UnionTypeDocument $typeDocument): Validator
+    {
+        $subValidators = [];
+        $nullable = $typeDocument->isNullable();
+
+        foreach ($typeDocument->subTypes as $subType) {
+            if ($subType instanceof NullTypeDocument) {
+                $nullable = true;
+            } else {
+                $subValidators[] = $this->withTypeDocument($subType)->build();
+            }
+        }
+
+        $validator = count($subValidators) !== 1
+            ? new AnyValidator($subValidators)
+            : array_pop($subValidators);
+
+        if ($nullable) {
+            return new NullableValidator($validator);
+        }
+
+        return $validator;
     }
 }
