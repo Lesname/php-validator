@@ -50,6 +50,7 @@ final class TypeDocumentValidatorBuilder implements ValidatorBuilder
     /**
      * @psalm-suppress ImpureMethodCall
      * @psalm-suppress ImpureFunctionCall
+     * @psalm-suppress DeprecatedMethod
      */
     #[Override]
     public function build(): Validator
@@ -89,6 +90,7 @@ final class TypeDocumentValidatorBuilder implements ValidatorBuilder
             $validator = new ChainValidator([$validator, ...$additionalValidators]);
         }
 
+        /** @phpstan-ignore method.deprecated */
         return $typeDocument->isNullable()
             ? new NullableValidator($validator)
             : $validator;
@@ -131,33 +133,43 @@ final class TypeDocumentValidatorBuilder implements ValidatorBuilder
         return new ChainValidator($chained);
     }
 
+    /**
+     * @psalm-suppress ImpureMethodCall
+     */
     private function buildFromCompositeTypeDocument(CompositeTypeDocument $typeDocument): Validator
     {
-        $validators = [TypeValidator::composite()];
+        $reflector = new ReflectionClass(ChainValidator::class);
 
-        $propertyValidators = [];
-        $keys = [];
+        return $reflector
+            ->newLazyProxy(
+                function () use ($typeDocument) {
+                    $validators = [TypeValidator::composite()];
 
-        foreach ($typeDocument->properties as $property) {
-            $keys[] = $property->key;
+                    $propertyValidators = [];
+                    $keys = [];
 
-            if ($property->key instanceof ExactKey) {
-                $propertyValidators[$property->key->value] = $this->withTypeDocument($property->type)->build();
-            } else {
-                $validators[] = new PropertyValidator($property->key, $this->withTypeDocument($property->type)->build());
-            }
-        }
+                    foreach ($typeDocument->properties as $property) {
+                        $keys[] = $property->key;
 
-        if ($typeDocument->allowExtraProperties === false) {
-            $validators[] = new PropertyKeysValidator($keys);
-        }
+                        if ($property->key instanceof ExactKey) {
+                            $propertyValidators[$property->key->value] = $this->withTypeDocument($property->type)->build();
+                        } else {
+                            $validators[] = new PropertyValidator($property->key, $this->withTypeDocument($property->type)->build());
+                        }
+                    }
 
-        return new ChainValidator(
-            [
-                ...$validators,
-                new PropertyValuesValidator($propertyValidators),
-            ],
-        );
+                    if ($typeDocument->allowExtraProperties === false) {
+                        $validators[] = new PropertyKeysValidator($keys);
+                    }
+
+                    return new ChainValidator(
+                        [
+                            ...$validators,
+                            new PropertyValuesValidator($propertyValidators),
+                        ],
+                    );
+                },
+            );
     }
 
     private function buildFromStringTypeDocument(StringTypeDocument $typeDocument): Validator
@@ -202,6 +214,7 @@ final class TypeDocumentValidatorBuilder implements ValidatorBuilder
     private function buildFromUnionTypeDocument(UnionTypeDocument $typeDocument): Validator
     {
         $subValidators = [];
+        /** @phpstan-ignore method.deprecated */
         $nullable = $typeDocument->isNullable();
 
         foreach ($typeDocument->subTypes as $subType) {
