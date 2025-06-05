@@ -6,9 +6,6 @@ namespace LesValidator;
 use Override;
 use LesValidator\ValidateResult\ValidateResult;
 
-/**
- * @psalm-immutable
- */
 abstract class AbstractCompositionValidator implements Validator
 {
     #[Override]

@@ -8,9 +8,6 @@ use LesValidator\ValidateResult\Composite\PropertiesValidateResult;
 use LesValidator\ValidateResult\ValidateResult;
 use LesValidator\Validator;
 
-/**
- * @psalm-immutable
- */
 final class PropertyValuesValidator implements Validator
 {
     /** @var array<string, Validator> */
@@ -33,13 +30,10 @@ final class PropertyValuesValidator implements Validator
     {
         assert(is_array($input));
 
-        $propertyValueValidators = $this->propertyValueValidators;
-
         return new PropertiesValidateResult(
             (
-                /** @psalm-pure */
-                function (array $input) use ($propertyValueValidators): iterable {
-                    foreach ($propertyValueValidators as $name => $propertyValueValidator) {
+                function (array $input): iterable {
+                    foreach ($this->propertyValueValidators as $name => $propertyValueValidator) {
                         yield $name => $propertyValueValidator->validate($input[$name] ?? null);
                     }
                 }

@@ -10,9 +10,6 @@ use LesValidator\ValidateResult\ValidValidateResult;
 use LesValidator\Validator;
 use LesValueObject\String\Format\StringFormatValueObject;
 
-/**
- * @psalm-immutable
- */
 final class FormatValidator implements Validator
 {
     /**

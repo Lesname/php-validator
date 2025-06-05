@@ -11,9 +11,6 @@ use LesValidator\ValidateResult\ValidValidateResult;
 use LesValidator\Validator;
 use LesValidator\ValidateResult\Composite\SelfValidateResult;
 
-/**
- * @psalm-immutable
- */
 final class PropertyKeysValidator implements Validator
 {
     /**

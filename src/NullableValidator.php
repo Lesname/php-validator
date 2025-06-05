@@ -7,9 +7,6 @@ use Override;
 use LesValidator\ValidateResult\ValidateResult;
 use LesValidator\ValidateResult\ValidValidateResult;
 
-/**
- * @psalm-immutable
- */
 final class NullableValidator implements Validator
 {
     public function __construct(public readonly Validator $subValidator)

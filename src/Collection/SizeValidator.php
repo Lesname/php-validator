@@ -10,9 +10,6 @@ use LesValidator\ValidateResult\ValidValidateResult;
 use LesValidator\Validator;
 use LesValidator\ValidateResult\Collection\SelfValidateResult;
 
-/**
- * @psalm-immutable
- */
 final class SizeValidator implements Validator
 {
     public function __construct(public readonly ?int $minSize, public readonly ?int $maxSize)

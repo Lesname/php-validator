@@ -10,9 +10,6 @@ use LesValidator\ValidateResult\ValidateResult;
 use LesValidator\ValidateResult\ValidValidateResult;
 use LesValidator\Validator;
 
-/**
- * @psalm-immutable
- */
 final class LengthValidator implements Validator
 {
     public function __construct(

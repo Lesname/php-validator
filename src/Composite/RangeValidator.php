@@ -10,9 +10,6 @@ use LesValidator\ValidateResult\ValidValidateResult;
 use LesValidator\ValidateResult\ErrorValidateResult;
 use LesValidator\ValidateResult\Composite\PropertiesValidateResult;
 
-/**
- * @psalm-immutable
- */
 final class RangeValidator implements Validator
 {
     public function __construct(

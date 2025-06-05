@@ -9,9 +9,6 @@ use LesValidator\ValidateResult\ValidateResult;
 use LesValidator\ValidateResult\ValidValidateResult;
 use RuntimeException;
 
-/**
- * @psalm-immutable
- */
 final class TypeValidator implements Validator
 {
     public const string BOOLEAN = 'boolean';

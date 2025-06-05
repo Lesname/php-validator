@@ -7,9 +7,6 @@ use Override;
 use LesValidator\ValidateResult\ValidateResult;
 use LesValidator\ValidateResult\ValidValidateResult;
 
-/**
- * @psalm-immutable
- */
 final class ChainValidator implements Validator
 {
     /** @var array<Validator> */

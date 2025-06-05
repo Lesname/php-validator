@@ -9,9 +9,6 @@ use LesValidator\ValidateResult\ValidateResult;
 use LesValidator\ValidateResult\ValidValidateResult;
 use LesValidator\Validator;
 
-/**
- * @psalm-immutable
- */
 final class OptionsValidator implements Validator
 {
     /** @var array<string> */

@@ -9,9 +9,6 @@ use LesValidator\ValidateResult\ValidateResult;
 use LesDocumentor\Type\Document\Composite\Key\Key;
 use LesValidator\ValidateResult\Composite\PropertiesValidateResult;
 
-/**
- * @psalm-immutable
- */
 final class PropertyValidator implements Validator
 {
     public function __construct(
