@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace LesValidator\Builder;
 
+use Closure;
 use Override;
 use ReflectionClass;
 use RuntimeException;
@@ -16,10 +17,12 @@ use LesValidator\String\FormatValidator;
 use LesValidator\String\OptionsValidator;
 use LesValidator\Number\BetweenValidator;
 use LesValidator\Collection\SizeValidator;
+use LesValidator\Recursive\ProxyValidator;
 use LesValidator\Collection\ItemsValidator;
 use LesValidator\Number\MultipleOfValidator;
 use LesDocumentor\Type\Document\TypeDocument;
 use LesValidator\Composite\PropertyValidator;
+use LesValidator\Recursive\MaxDepthValidator;
 use LesDocumentor\Type\Document\BoolTypeDocument;
 use LesDocumentor\Type\Document\EnumTypeDocument;
 use LesValidator\Composite\PropertyKeysValidator;
@@ -28,17 +31,18 @@ use LesDocumentor\Type\Document\UnionTypeDocument;
 use LesDocumentor\Type\Document\NumberTypeDocument;
 use LesDocumentor\Type\Document\StringTypeDocument;
 use LesValidator\Composite\PropertyValuesValidator;
+use LesDocumentor\Type\Document\NestedTypeDocument;
 use LesDocumentor\Type\Document\CompositeTypeDocument;
 use LesDocumentor\Type\Document\CollectionTypeDocument;
 use LesValidator\Builder\Attribute\AdditionalValidator;
 use LesDocumentor\Type\Document\Composite\Key\ExactKey;
 use LesValueObject\String\Format\StringFormatValueObject;
 
-/**
- * @psalm-immutable
- */
 final class TypeDocumentValidatorBuilder implements ValidatorBuilder
 {
+    /** @var array<string, array{validator: Validator, used: boolean}> */
+    private static array $recursiveValidators = [];
+
     public function __construct(private readonly ?TypeDocument $typeDocument = null)
     {}
 
@@ -63,8 +67,8 @@ final class TypeDocumentValidatorBuilder implements ValidatorBuilder
 
         $validator = match (true) {
             $typeDocument instanceof BoolTypeDocument => TypeValidator::boolean(),
-            $typeDocument instanceof CollectionTypeDocument => $this->buildFromCollectionTypeDocument($typeDocument),
-            $typeDocument instanceof CompositeTypeDocument => $this->buildFromCompositeTypeDocument($typeDocument),
+            $typeDocument instanceof CollectionTypeDocument => $this->buildForRecursiveTypeDocument($typeDocument, $this->buildFromCollectionTypeDocument(...)),
+            $typeDocument instanceof CompositeTypeDocument => $this->buildForRecursiveTypeDocument($typeDocument, $this->buildFromCompositeTypeDocument(...)),
             $typeDocument instanceof EnumTypeDocument => new ChainValidator(
                 [
                     TypeValidator::string(),
@@ -120,8 +124,59 @@ final class TypeDocumentValidatorBuilder implements ValidatorBuilder
         return $additionalValidators;
     }
 
-    private function buildFromCollectionTypeDocument(CollectionTypeDocument $typeDocument): Validator
+    /**
+     * @param Closure(TypeDocument): Validator $builder
+     */
+    private function buildForRecursiveTypeDocument(TypeDocument $typeDocument, Closure $builder): Validator
     {
+        if ($typeDocument->getReference() === null) {
+            return $builder($typeDocument);
+        }
+
+        $key = $typeDocument->getReference();
+
+        if (isset(self::$recursiveValidators[$key])) {
+            self::$recursiveValidators[$key]['used'] = true;
+
+            return self::$recursiveValidators[$key]['validator'];
+        }
+
+        $proxy = new ProxyValidator();
+
+        self::$recursiveValidators[$key] = [
+            'used' => false,
+            'validator' => $proxy,
+        ];
+
+        $validator = $builder($typeDocument);
+
+        /** @psalm-suppress TypeDoesNotContainType */
+        if (self::$recursiveValidators[$key]['used']) {
+            $maxDepth = 16;
+
+            if ($typeDocument instanceof NestedTypeDocument) {
+                $maxDepth = $typeDocument->getMaxDepth() ?? $maxDepth;
+            }
+
+            $validator = $proxy->setProxy(
+                new MaxDepthValidator(
+                    $validator,
+                    $maxDepth,
+                ),
+            );
+        }
+
+        unset(self::$recursiveValidators[$key]);
+
+        return $validator;
+    }
+
+    private function buildFromCollectionTypeDocument(TypeDocument $typeDocument): Validator
+    {
+        if (!$typeDocument instanceof CollectionTypeDocument) {
+            throw new RuntimeException();
+        }
+
         $chained = [TypeValidator::collection()];
 
         if ($typeDocument->size) {
@@ -136,40 +191,37 @@ final class TypeDocumentValidatorBuilder implements ValidatorBuilder
     /**
      * @psalm-suppress ImpureMethodCall
      */
-    private function buildFromCompositeTypeDocument(CompositeTypeDocument $typeDocument): Validator
+    private function buildFromCompositeTypeDocument(TypeDocument $typeDocument): Validator
     {
-        $reflector = new ReflectionClass(ChainValidator::class);
+        if (!$typeDocument instanceof CompositeTypeDocument) {
+            throw new RuntimeException();
+        }
 
-        return $reflector
-            ->newLazyProxy(
-                function () use ($typeDocument) {
-                    $validators = [TypeValidator::composite()];
+        $validators = [TypeValidator::composite()];
 
-                    $propertyValidators = [];
-                    $keys = [];
+        $propertyValidators = [];
+        $keys = [];
 
-                    foreach ($typeDocument->properties as $property) {
-                        $keys[] = $property->key;
+        foreach ($typeDocument->properties as $property) {
+            $keys[] = $property->key;
 
-                        if ($property->key instanceof ExactKey) {
-                            $propertyValidators[$property->key->value] = $this->withTypeDocument($property->type)->build();
-                        } else {
-                            $validators[] = new PropertyValidator($property->key, $this->withTypeDocument($property->type)->build());
-                        }
-                    }
+            if ($property->key instanceof ExactKey) {
+                $propertyValidators[$property->key->value] = $this->withTypeDocument($property->type)->build();
+            } else {
+                $validators[] = new PropertyValidator($property->key, $this->withTypeDocument($property->type)->build());
+            }
+        }
 
-                    if ($typeDocument->allowExtraProperties === false) {
-                        $validators[] = new PropertyKeysValidator($keys);
-                    }
+        if ($typeDocument->allowExtraProperties === false) {
+            $validators[] = new PropertyKeysValidator($keys);
+        }
 
-                    return new ChainValidator(
-                        [
-                            ...$validators,
-                            new PropertyValuesValidator($propertyValidators),
-                        ],
-                    );
-                },
-            );
+        return new ChainValidator(
+            [
+                ...$validators,
+                new PropertyValuesValidator($propertyValidators),
+            ],
+        );
     }
 
     private function buildFromStringTypeDocument(StringTypeDocument $typeDocument): Validator
