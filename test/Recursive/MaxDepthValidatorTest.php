@@ -35,8 +35,6 @@ class MaxDepthValidatorTest extends TestCase
     {
         $input = [];
 
-        $result = $this->createMock(ValidateResult::class);
-
         $subValidator = $this->createMock(Validator::class);
 
         $validator = new MaxDepthValidator($subValidator, 0);
