@@ -9,9 +9,6 @@ use LesValidator\ValidateResult\ValidateResult;
 use LesValidator\ValidateResult\ErrorValidateResult;
 use LesValidator\ValidateResult\ValidValidateResult;
 
-/**
- * @psalm-immutable
- */
 final class MultipleOfValidator implements Validator
 {
     public function __construct(private readonly float|int $multipleOf)

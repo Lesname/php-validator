@@ -10,9 +10,6 @@ use LesValidator\TypeValidator;
 use LesValidator\ChainValidator;
 use LesValidator\String\LengthValidator;
 
-/**
- * @psalm-immutable
- */
 final class StringValidatorBuilder implements ValidatorBuilder
 {
     public function __construct(

@@ -9,9 +9,6 @@ use LesValidator\ValidateResult\ValidateResult;
 use LesValidator\ValidateResult\ValidValidateResult;
 use LesValidator\Validator;
 
-/**
- * @psalm-immutable
- */
 final class BetweenValidator implements Validator
 {
     public function __construct(

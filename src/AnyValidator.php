@@ -7,9 +7,6 @@ use Override;
 use LesValidator\ValidateResult\ValidateResult;
 use LesValidator\ValidateResult\AnyValidateResult;
 
-/**
- * @psalm-immutable
- */
 final class AnyValidator implements Validator
 {
     /** @var array<Validator> */

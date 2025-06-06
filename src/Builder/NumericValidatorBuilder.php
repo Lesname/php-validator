@@ -10,9 +10,6 @@ use LesValidator\TypeValidator;
 use LesValidator\ChainValidator;
 use LesValidator\Number\BetweenValidator;
 
-/**
- * @psalm-immutable
- */
 final class NumericValidatorBuilder implements ValidatorBuilder
 {
     public function __construct(

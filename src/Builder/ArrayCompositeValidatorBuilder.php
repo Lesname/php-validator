@@ -11,9 +11,6 @@ use LesValidator\ChainValidator;
 use LesValidator\Composite\PropertyKeysValidator;
 use LesValidator\Composite\PropertyValuesValidator;
 
-/**
- * @psalm-immutable
- */
 final class ArrayCompositeValidatorBuilder implements ValidatorBuilder
 {
     /**
