@@ -5,6 +5,7 @@
     "php": "^8.4.0",
 
     "ext-json": "*",
+    "ext-bcmath": "*",
 
     "lesname/documentor": "^0.6.0"
   },

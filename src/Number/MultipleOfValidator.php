@@ -12,13 +12,18 @@ use LesValidator\ValidateResult\ValidValidateResult;
 
 final class MultipleOfValidator implements Validator
 {
+    private readonly int $precision;
+
     public function __construct(
         private readonly float|int $multipleOf,
         private readonly float|int $offset = 0,
+        ?int $precision = null,
     ) {
         if ($multipleOf <= 0) {
             throw new RuntimeException("Multiple of must be >0, gotten '{$multipleOf}'");
         }
+
+        $this->precision = $precision ?? (int)ini_get('precision');
     }
 
     #[Override]
@@ -36,10 +41,7 @@ final class MultipleOfValidator implements Validator
         return new ValidValidateResult();
     }
 
-    /**
-     * @psalm-pure
-     */
-    private function isMultipleOf(float | int $value): bool
+    private function isMultipleOf(float|int $value): bool
     {
         $value = $value + $this->offset;
 
@@ -47,35 +49,29 @@ final class MultipleOfValidator implements Validator
             return true;
         }
 
-        if (is_float($this->multipleOf)) {
-            $ofParts = explode('.', (string)$this->multipleOf);
-            $precision = strlen($ofParts[1]);
-            $of = (int)($ofParts[0] . $ofParts[1]);
-            $power = pow(10, $precision);
-        } else {
-            $of = $this->multipleOf;
-            $precision = 0;
-            $power = 1;
-        }
+        $remainder = rtrim(
+            bcmod(
+                $this->floatToString($value),
+                $this->floatToString($this->multipleOf),
+                $this->precision,
+            ),
+            '.0',
+        );
 
-        if (is_float($value)) {
-            $valueParts = explode('.', (string)$value);
-            $valueParts[1] ??= '';
+        return $remainder === '';
+    }
 
-            if (strlen($valueParts[1]) > $precision) {
-                return false;
-            } else {
-                $float = str_pad($valueParts[1], $precision, '0');
-                $check = (int)($valueParts[0] . $float);
-            }
-        } else {
-            $check = $value * $power;
-        }
-
-        if ($check % $of !== 0) {
-            return false;
-        }
-
-        return true;
+    private function floatToString(float $float): string
+    {
+        return rtrim(
+            rtrim(
+                sprintf(
+                    '%.' . $this->precision . 'f',
+                    $float
+                ),
+                '0'
+            ),
+            '.'
+        );
     }
 }

@@ -34,6 +34,7 @@ class MultipleOfValidatorTest extends TestCase
             [.4, 0, 2],
             [.4, 0, 1.6],
             [.4, .2, 1.8],
+            'eFloat' => [.000_01, 0, .000_05],
         ];
     }
 
@@ -58,6 +59,7 @@ class MultipleOfValidatorTest extends TestCase
             [.2, 0, .5],
             [.4, 0, 2.1],
             [.4, .2, 1.6],
+            'eFloat' => [.000_02, 0, .000_05],
         ];
     }
 }
