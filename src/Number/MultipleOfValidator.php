@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace LesValidator\Number;
 
 use Override;
+use RuntimeException;
 use LesValidator\Validator;
 use LesValidator\ValidateResult\ValidateResult;
 use LesValidator\ValidateResult\ErrorValidateResult;
@@ -15,7 +16,9 @@ final class MultipleOfValidator implements Validator
         private readonly float|int $multipleOf,
         private readonly float|int $offset = 0,
     ) {
-        assert($multipleOf > 0, "Multiple of must be >0, gotten '{$multipleOf}'");
+        if ($multipleOf <= 0) {
+            throw new RuntimeException("Multiple of must be >0, gotten '{$multipleOf}'");
+        }
     }
 
     #[Override]
