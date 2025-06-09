@@ -25,6 +25,7 @@ class MultipleOfValidatorTest extends TestCase
     public static function getValidData(): array
     {
         return [
+            [1, 0, 0],
             [1, 0, 5],
             [2, 0, 6],
             [2, 1, 5],
