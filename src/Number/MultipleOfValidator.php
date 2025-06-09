@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace LesValidator\Number;
 
 use Override;
+use RuntimeException;
 use LesValidator\Validator;
 use LesValidator\ValidateResult\ValidateResult;
 use LesValidator\ValidateResult\ErrorValidateResult;
@@ -11,9 +12,18 @@ use LesValidator\ValidateResult\ValidValidateResult;
 
 final class MultipleOfValidator implements Validator
 {
-    public function __construct(private readonly float|int $multipleOf)
-    {
-        assert($multipleOf > 0, "Multiple of must be >0, gotten '{$multipleOf}'");
+    private readonly int $precision;
+
+    public function __construct(
+        private readonly float|int $multipleOf,
+        private readonly float|int $offset = 0,
+        ?int $precision = null,
+    ) {
+        if ($multipleOf <= 0) {
+            throw new RuntimeException("Multiple of must be >0, gotten '{$multipleOf}'");
+        }
+
+        $this->precision = $precision ?? (int)ini_get('precision');
     }
 
     #[Override]
@@ -21,7 +31,7 @@ final class MultipleOfValidator implements Validator
     {
         assert(is_float($input) || is_int($input));
 
-        if (!self::isMultipleOf($input, $this->multipleOf)) {
+        if (!$this->isMultipleOf($input)) {
             return new ErrorValidateResult(
                 'number.notMultipleOf',
                 ['multipleOf' => $this->multipleOf],
@@ -31,42 +41,37 @@ final class MultipleOfValidator implements Validator
         return new ValidValidateResult();
     }
 
-    /**
-     * @psalm-pure
-     */
-    private static function isMultipleOf(float | int $value, float | int $of): bool
+    private function isMultipleOf(float|int $value): bool
     {
-        if (is_int($value) && is_int($of) && $value % $of === 0) {
+        $value = $value + $this->offset;
+
+        if (is_int($value) && is_int($this->multipleOf) && $value % $this->multipleOf === 0) {
             return true;
         }
 
-        if (is_float($of)) {
-            $ofParts = explode('.', (string)$of);
-            $precision = strlen($ofParts[1]);
-            $of = (int)($ofParts[0] . $ofParts[1]);
-            $power = pow(10, $precision);
-        } else {
-            $precision = 0;
-            $power = 1;
-        }
+        $remainder = rtrim(
+            bcmod(
+                $this->floatToString($value),
+                $this->floatToString($this->multipleOf),
+                $this->precision,
+            ),
+            '.0',
+        );
 
-        if (is_float($value)) {
-            $valueParts = explode('.', (string)$value);
+        return $remainder === '';
+    }
 
-            if (strlen($valueParts[1]) > $precision) {
-                return false;
-            } else {
-                $float = str_pad($valueParts[1], $precision, '0');
-                $check = (int)($valueParts[0] . $float);
-            }
-        } else {
-            $check = $value * $power;
-        }
-
-        if ($check % $of !== 0) {
-            return false;
-        }
-
-        return true;
+    private function floatToString(float $float): string
+    {
+        return rtrim(
+            rtrim(
+                sprintf(
+                    '%.' . $this->precision . 'f',
+                    $float
+                ),
+                '0'
+            ),
+            '.'
+        );
     }
 }
