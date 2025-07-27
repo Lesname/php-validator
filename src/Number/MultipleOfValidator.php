@@ -43,15 +43,15 @@ final class MultipleOfValidator implements Validator
 
     private function isMultipleOf(float|int $value): bool
     {
-        $value = $value + $this->offset;
-
-        if (is_int($value) && is_int($this->multipleOf) && $value % $this->multipleOf === 0) {
-            return true;
+        if (is_int($value) && is_int($this->offset) && is_int($this->multipleOf)) {
+            return ($value + $this->offset) % $this->multipleOf === 0;
         }
+
+        $newValue = (float)$value + (float)$this->offset;
 
         $remainder = rtrim(
             bcmod(
-                $this->floatToString($value),
+                $this->floatToString($newValue),
                 $this->floatToString($this->multipleOf),
                 $this->precision,
             ),
@@ -61,9 +61,12 @@ final class MultipleOfValidator implements Validator
         return $remainder === '';
     }
 
+    /**
+     * @return numeric-string
+     */
     private function floatToString(float $float): string
     {
-        return rtrim(
+        $string = rtrim(
             rtrim(
                 sprintf(
                     '%.' . $this->precision . 'f',
@@ -73,5 +76,9 @@ final class MultipleOfValidator implements Validator
             ),
             '.'
         );
+
+        assert(is_numeric($string));
+
+        return $string;
     }
 }
