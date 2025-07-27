@@ -203,12 +203,17 @@ final class TypeDocumentValidatorBuilder implements ValidatorBuilder
         $keys = [];
 
         foreach ($typeDocument->properties as $property) {
+            $propertyValidator = $this->withTypeDocument($property->type)->build();
             $keys[] = $property->key;
 
+            if ($property->default !== null && !$propertyValidator instanceof NullableValidator) {
+                $propertyValidator = new NullableValidator($propertyValidator);
+            }
+
             if ($property->key instanceof ExactKey) {
-                $propertyValidators[$property->key->value] = $this->withTypeDocument($property->type)->build();
+                $propertyValidators[$property->key->value] = $propertyValidator;
             } else {
-                $validators[] = new PropertyValidator($property->key, $this->withTypeDocument($property->type)->build());
+                $validators[] = new PropertyValidator($property->key, $propertyValidator);
             }
         }
 
@@ -263,6 +268,9 @@ final class TypeDocumentValidatorBuilder implements ValidatorBuilder
         return new ChainValidator($validators);
     }
 
+    /**
+     * @psalm-suppress DeprecatedMethod
+     */
     private function buildFromUnionTypeDocument(UnionTypeDocument $typeDocument): Validator
     {
         $subValidators = [];
