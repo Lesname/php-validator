@@ -268,6 +268,9 @@ final class TypeDocumentValidatorBuilder implements ValidatorBuilder
         return new ChainValidator($validators);
     }
 
+    /**
+     * @psalm-suppress DeprecatedMethod
+     */
     private function buildFromUnionTypeDocument(UnionTypeDocument $typeDocument): Validator
     {
         $subValidators = [];
