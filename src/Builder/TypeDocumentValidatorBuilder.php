@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace LesValidator\Builder;
@@ -51,11 +52,6 @@ final class TypeDocumentValidatorBuilder implements ValidatorBuilder
         return new self($typeDocument);
     }
 
-    /**
-     * @psalm-suppress ImpureMethodCall
-     * @psalm-suppress ImpureFunctionCall
-     * @psalm-suppress DeprecatedMethod
-     */
     #[Override]
     public function build(): Validator
     {
@@ -94,10 +90,7 @@ final class TypeDocumentValidatorBuilder implements ValidatorBuilder
             $validator = new ChainValidator([$validator, ...$additionalValidators]);
         }
 
-        /** @phpstan-ignore method.deprecated */
-        return $typeDocument->isNullable()
-            ? new NullableValidator($validator)
-            : $validator;
+        return $validator;
     }
 
     /**
@@ -268,14 +261,10 @@ final class TypeDocumentValidatorBuilder implements ValidatorBuilder
         return new ChainValidator($validators);
     }
 
-    /**
-     * @psalm-suppress DeprecatedMethod
-     */
     private function buildFromUnionTypeDocument(UnionTypeDocument $typeDocument): Validator
     {
         $subValidators = [];
-        /** @phpstan-ignore method.deprecated */
-        $nullable = $typeDocument->isNullable();
+        $nullable = false;
 
         foreach ($typeDocument->subTypes as $subType) {
             if ($subType instanceof NullTypeDocument) {

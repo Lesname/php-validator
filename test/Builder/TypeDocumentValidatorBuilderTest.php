@@ -1,10 +1,12 @@
 <?php
+
 declare(strict_types=1);
 
 namespace LesValidatorTest\Builder;
 
 use LesDocumentor\Type\Document\BoolTypeDocument;
 use LesDocumentor\Type\Document\Collection\Size;
+use LesDocumentor\Type\Document\UnionTypeDocument;
 use LesDocumentor\Type\Document\Composite\Key\AnyKey;
 use LesValidator\Builder\TypeDocumentValidatorBuilder;
 use LesDocumentor\Type\Document\CollectionTypeDocument;
@@ -208,7 +210,7 @@ final class TypeDocumentValidatorBuilderTest extends TestCase
             new Range(-5, 5),
             .01,
         );
-        $doc = $doc->withNullable();
+        $doc = UnionTypeDocument::nullable($doc);
 
         $validator = (new TypeDocumentValidatorBuilder($doc))
             ->build();
