@@ -29,6 +29,7 @@ use LesDocumentor\Type\Document\EnumTypeDocument;
 use LesValidator\Composite\PropertyKeysValidator;
 use LesDocumentor\Type\Document\NullTypeDocument;
 use LesDocumentor\Type\Document\UnionTypeDocument;
+use LesValidator\Composite\DiscriminatorValidator;
 use LesDocumentor\Type\Document\NumberTypeDocument;
 use LesDocumentor\Type\Document\StringTypeDocument;
 use LesValidator\Composite\PropertyValuesValidator;
@@ -195,9 +196,16 @@ final class TypeDocumentValidatorBuilder implements ValidatorBuilder
         $propertyValidators = [];
         $keys = [];
 
+        $discriminatorProperty = $typeDocument->discriminator?->property;
+
         foreach ($typeDocument->properties as $property) {
-            $propertyValidator = $this->withTypeDocument($property->type)->build();
             $keys[] = $property->key;
+
+            if ($property->key instanceof ExactKey && $property->key->value === $discriminatorProperty) {
+                continue;
+            }
+
+            $propertyValidator = $this->withTypeDocument($property->type)->build();
 
             if ($property->default !== null && !$propertyValidator instanceof NullableValidator) {
                 $propertyValidator = new NullableValidator($propertyValidator);
@@ -214,12 +222,20 @@ final class TypeDocumentValidatorBuilder implements ValidatorBuilder
             $validators[] = new PropertyKeysValidator($keys);
         }
 
-        return new ChainValidator(
-            [
-                ...$validators,
-                new PropertyValuesValidator($propertyValidators),
-            ],
-        );
+        $validators[] = new PropertyValuesValidator($propertyValidators);
+
+        if ($typeDocument->discriminator) {
+            $validators[] = new DiscriminatorValidator(
+                $typeDocument->discriminator->field,
+                $typeDocument->discriminator->property,
+                array_map(
+                    fn (TypeDocument $subDocument): Validator => $this->withTypeDocument($subDocument)->build(),
+                    $typeDocument->discriminator->mapping,
+                ),
+            );
+        }
+
+        return new ChainValidator($validators);
     }
 
     private function buildFromStringTypeDocument(StringTypeDocument $typeDocument): Validator
