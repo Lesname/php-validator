@@ -12,6 +12,9 @@ use LesValidator\ChainValidator;
 use LesValidator\Composite\PropertyKeysValidator;
 use LesValidator\Composite\PropertyValuesValidator;
 
+/**
+ * @deprecated will be dropped
+ */
 final class ArrayCompositeValidatorBuilder implements ValidatorBuilder
 {
     /**

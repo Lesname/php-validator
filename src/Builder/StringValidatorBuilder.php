@@ -11,6 +11,9 @@ use LesValidator\TypeValidator;
 use LesValidator\ChainValidator;
 use LesValidator\String\LengthValidator;
 
+/**
+ * @deprecated will be dropped
+ */
 final class StringValidatorBuilder implements ValidatorBuilder
 {
     public function __construct(

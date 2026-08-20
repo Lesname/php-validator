@@ -11,6 +11,9 @@ use LesValidator\TypeValidator;
 use LesValidator\ChainValidator;
 use LesValidator\Number\BetweenValidator;
 
+/**
+ * @deprecated will be dropped
+ */
 final class NumericValidatorBuilder implements ValidatorBuilder
 {
     public function __construct(
