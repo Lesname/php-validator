@@ -40,6 +40,9 @@ use LesValidator\Builder\Attribute\AdditionalValidator;
 use LesDocumentor\Type\Document\Composite\Key\ExactKey;
 use LesValueObject\String\Format\StringFormatValueObject;
 
+/**
+ * @todo move this to own package
+ */
 final class TypeDocumentValidatorBuilder implements ValidatorBuilder
 {
     /** @var array<string, array{validator: Validator, used: boolean}> */

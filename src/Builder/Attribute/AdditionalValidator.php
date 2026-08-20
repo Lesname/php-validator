@@ -7,6 +7,9 @@ namespace LesValidator\Builder\Attribute;
 use Attribute;
 use LesValidator\Validator;
 
+/**
+ * @todo move this to own package
+ */
 #[Attribute(Attribute::IS_REPEATABLE | Attribute::TARGET_CLASS)]
 final class AdditionalValidator
 {
