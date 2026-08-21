@@ -13,11 +13,17 @@ use LesValidator\Validator;
 
 final class LengthValidator implements Validator
 {
+    /**
+     * @psalm-pure
+     */
     public function __construct(
         public readonly ?int $minLength,
         public readonly ?int $maxLength,
     ) {}
 
+    /**
+     * @psalm-mutation-free
+     */
     #[Override]
     public function validate(mixed $input): ValidateResult
     {

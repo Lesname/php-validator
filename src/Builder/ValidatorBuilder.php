@@ -8,8 +8,13 @@ use LesValidator\Validator;
 
 /**
  * @todo move this to own package
+ *
+ * @psalm-mutable
  */
 interface ValidatorBuilder
 {
+    /**
+     * @psalm-impure
+     */
     public function build(): Validator;
 }

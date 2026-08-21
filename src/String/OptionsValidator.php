@@ -15,7 +15,11 @@ final class OptionsValidator implements Validator
     /** @var array<string> */
     public readonly array $options;
 
-    /** @param iterable<string> $options */
+    /**
+     * @param iterable<string> $options
+     *
+     * @psalm-impure
+     */
     public function __construct(iterable $options)
     {
         $arrayOptions = [];
@@ -27,6 +31,9 @@ final class OptionsValidator implements Validator
         $this->options = $arrayOptions;
     }
 
+    /**
+     * @psalm-mutation-free
+     */
     #[Override]
     public function validate(mixed $input): ValidateResult
     {

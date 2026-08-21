@@ -9,12 +9,16 @@ use LesValidator\Validator;
 
 /**
  * @todo move this to own package
+ *
+ * @psalm-immutable
  */
 #[Attribute(Attribute::IS_REPEATABLE | Attribute::TARGET_CLASS)]
 final class AdditionalValidator
 {
     /**
      * @param class-string<Validator> $validator
+     *
+     * @psalm-mutation-free
      */
     public function __construct(public readonly string $validator)
     {}

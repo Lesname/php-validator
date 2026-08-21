@@ -16,47 +16,74 @@ use LesValidator\Number\BetweenValidator;
  */
 final class NumericValidatorBuilder implements ValidatorBuilder
 {
+    /**
+     * @psalm-mutation-free
+     */
     public function __construct(
         private readonly bool $onlyIntegers = false,
         private readonly float|int|null $minimal = null,
         private readonly float|int|null $maximal = null,
     ) {}
 
+    /**
+     * @psalm-mutation-free
+     */
     public function isOnlyIntegers(): bool
     {
         return $this->onlyIntegers;
     }
 
+    /**
+     * @psalm-mutation-free
+     */
     public function getMinimal(): float|int|null
     {
         return $this->minimal;
     }
 
+    /**
+     * @psalm-mutation-free
+     */
     public function getMaximal(): float|int|null
     {
         return $this->maximal;
     }
 
+    /**
+     * @psalm-mutation-free
+     */
     public function withBetween(float|int $minimal, float|int $maximal): self
     {
         return new self($this->onlyIntegers, $minimal, $maximal);
     }
 
+    /**
+     * @psalm-mutation-free
+     */
     public function withMinimum(float|int $minimal): self
     {
         return new self($this->onlyIntegers, $minimal, $this->maximal);
     }
 
+    /**
+     * @psalm-mutation-free
+     */
     public function withMaximal(float|int $maximal): self
     {
         return new self($this->onlyIntegers, $this->minimal, $maximal);
     }
 
+    /**
+     * @psalm-mutation-free
+     */
     public function withOnlyIntegers(bool $onlyIntegers = true): self
     {
         return new self($onlyIntegers, $this->minimal, $this->maximal);
     }
 
+    /**
+     * @psalm-mutation-free
+     */
     #[Override]
     public function build(): Validator
     {

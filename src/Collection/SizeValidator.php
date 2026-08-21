@@ -13,9 +13,15 @@ use LesValidator\ValidateResult\Collection\SelfValidateResult;
 
 final class SizeValidator implements Validator
 {
+    /**
+     * @psalm-mutation-free
+     */
     public function __construct(public readonly ?int $minSize, public readonly ?int $maxSize)
     {}
 
+    /**
+     * @psalm-mutation-free
+     */
     #[Override]
     public function validate(mixed $input): ValidateResult
     {

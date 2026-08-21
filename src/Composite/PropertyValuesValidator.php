@@ -30,15 +30,13 @@ final class PropertyValuesValidator implements Validator
     public function validate(mixed $input): ValidateResult
     {
         assert(is_array($input));
+        $results = [];
 
-        return new PropertiesValidateResult(
-            (
-                function (array $input): iterable {
-                    foreach ($this->propertyValueValidators as $name => $propertyValueValidator) {
-                        yield $name => $propertyValueValidator->validate($input[$name] ?? null);
-                    }
-                }
-            )($input),
-        );
+        foreach ($this->propertyValueValidators as $name => $propertyValueValidator) {
+            $results[$name] = $propertyValueValidator->validate($input[$name] ?? null);
+        }
+
+
+        return new PropertiesValidateResult($results);
     }
 }

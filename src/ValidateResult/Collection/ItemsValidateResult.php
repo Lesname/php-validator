@@ -12,26 +12,16 @@ use LesValidator\ValidateResult\ValidateResult;
  */
 final class ItemsValidateResult implements ValidateResult
 {
-    /** @var array<int, ValidateResult> */
-    public readonly array $items;
-
     private readonly bool $valid;
 
     /**
-     * @param iterable<int, ValidateResult> $items
+     * @param list<ValidateResult> $items
+     *
+     * @psalm-mutation-free
      */
-    public function __construct(iterable $items)
+    public function __construct(public readonly array $items)
     {
-        $arrayItems = [];
-        $valid = true;
-
-        foreach ($items as $item) {
-            $valid = $valid && $item->isValid();
-            $arrayItems[] = $item;
-        }
-
-        $this->items = $arrayItems;
-        $this->valid = $valid;
+        $this->valid = array_all($items, fn (ValidateResult $item) => $item->isValid());
     }
 
     #[Override]

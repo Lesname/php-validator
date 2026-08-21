@@ -11,26 +11,19 @@ use Override;
  */
 final class AnyValidateResult implements ValidateResult
 {
-    /** @var array<int, ValidateResult> */
-    public readonly array $items;
-
     private readonly bool $valid;
 
     /**
-     * @param iterable<int, ValidateResult> $items
+     * @param list<ValidateResult> $items
+     *
+     * @psalm-mutation-free
      */
-    public function __construct(iterable $items)
+    public function __construct(public readonly array $items)
     {
-        $arrayItems = [];
-        $valid = false;
-
-        foreach ($items as $item) {
-            $valid = $valid || $item->isValid();
-            $arrayItems[] = $item;
-        }
-
-        $this->items = $arrayItems;
-        $this->valid = $valid;
+        $this->valid = array_any(
+            $this->items,
+            static fn (ValidateResult $result): bool => $result->isValid(),
+        );
     }
 
     #[Override]

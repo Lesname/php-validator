@@ -11,5 +11,8 @@ use JsonSerializable;
  */
 interface ValidateResult extends JsonSerializable
 {
+    /**
+     * @psalm-mutation-free
+     */
     public function isValid(): bool;
 }

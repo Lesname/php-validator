@@ -14,6 +14,8 @@ final class DiscriminatorValidator implements Validator
 {
     /**
      * @param array<string, Validator> $mapping
+     *
+     * @psalm-mutation-free
      */
     public function __construct(
         private readonly string $discriminatorField,

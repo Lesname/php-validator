@@ -7,7 +7,7 @@
     "ext-json": "*",
     "ext-bcmath": "*",
 
-    "lesname/documentor": "^0.7.2"
+    "lesname/documentor": "^0.7.3"
   },
   "require-dev": {
     "ext-intl": "*",
@@ -15,7 +15,7 @@
     "squizlabs/php_codesniffer": "^4.0.0",
     "phpunit/phpunit": "^13.0.0",
 
-    "vimeo/psalm": "^7.0.0-beta9",
+    "vimeo/psalm": "^7.0.0-beta19",
 
     "phpstan/phpstan": "^2.0.0",
     "phpstan/extension-installer": "^1.4.0",

@@ -48,14 +48,23 @@ final class TypeDocumentValidatorBuilder implements ValidatorBuilder
     /** @var array<string, array{validator: Validator, used: boolean}> */
     private static array $recursiveValidators = [];
 
+    /**
+     * @psalm-pure
+     */
     public function __construct(private readonly ?TypeDocument $typeDocument = null)
     {}
 
+    /**
+     * @psalm-pure
+     */
     public function withTypeDocument(TypeDocument $typeDocument): self
     {
         return new self($typeDocument);
     }
 
+    /**
+     * @psalm-impure
+     */
     #[Override]
     public function build(): Validator
     {
@@ -102,6 +111,8 @@ final class TypeDocumentValidatorBuilder implements ValidatorBuilder
      * @psalm-suppress ImpureFunctionCall class_exists
      *
      * @return array<Validator>
+     *
+     * @psalm-mutation-free
      */
     private function getAdditionalValidators(TypeDocument $typeDocument): array
     {
@@ -123,6 +134,8 @@ final class TypeDocumentValidatorBuilder implements ValidatorBuilder
 
     /**
      * @param Closure(TypeDocument): Validator $builder
+     *
+     * @psalm-impure
      */
     private function buildForRecursiveTypeDocument(TypeDocument $typeDocument, Closure $builder): Validator
     {
@@ -168,6 +181,8 @@ final class TypeDocumentValidatorBuilder implements ValidatorBuilder
         return $validator;
     }
 
+    /**
+     */
     private function buildFromCollectionTypeDocument(TypeDocument $typeDocument): Validator
     {
         if (!$typeDocument instanceof CollectionTypeDocument) {
@@ -241,6 +256,9 @@ final class TypeDocumentValidatorBuilder implements ValidatorBuilder
         return new ChainValidator($validators);
     }
 
+    /**
+     * @psalm-pure
+     */
     private function buildFromStringTypeDocument(StringTypeDocument $typeDocument): Validator
     {
         $validators = [TypeValidator::string()];
@@ -258,6 +276,9 @@ final class TypeDocumentValidatorBuilder implements ValidatorBuilder
         return new ChainValidator($validators);
     }
 
+    /**
+     * @psalm-pure
+     */
     private function buildFromNumberTypeDocument(NumberTypeDocument $typeDocument): Validator
     {
         if (is_int($typeDocument->multipleOf)) {

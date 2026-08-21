@@ -10,26 +10,25 @@ use LesValidator\ValidateResult\ValidValidateResult;
 
 final class ChainValidator implements Validator
 {
-    /** @var array<Validator> */
-    public readonly array $validators;
+    /**
+     * @param array<Validator> $validators
+     *
+     * @psalm-pure
+     */
+    public function __construct(public readonly array $validators)
+    {}
 
-    /** @param iterable<Validator> $validators */
-    public function __construct(iterable $validators)
-    {
-        $validatorsArray = [];
-
-        foreach ($validators as $validator) {
-            $validatorsArray[] = $validator;
-        }
-
-        $this->validators = $validatorsArray;
-    }
-
+    /**
+     * @psalm-pure
+     */
     public static function chain(Validator ...$validators): self
     {
         return new self($validators);
     }
 
+    /**
+     * @psalm-impure
+     */
     #[Override]
     public function validate(mixed $input): ValidateResult
     {
