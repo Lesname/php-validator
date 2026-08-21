@@ -13,6 +13,9 @@ final class ProxyValidator implements Validator
 {
     private ?Validator $proxy = null;
 
+    /**
+     * @psalm-external-mutation-free
+     */
     public function setProxy(Validator $proxy): self
     {
         $this->proxy = $proxy;

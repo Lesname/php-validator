@@ -12,26 +12,19 @@ use LesValidator\ValidateResult\ValidateResult;
  */
 final class PropertiesValidateResult implements ValidateResult
 {
-    /** @var array<string, ValidateResult> */
-    public readonly array $properties;
-
     private readonly bool $valid;
 
     /**
-     * @param iterable<string, ValidateResult> $properties
+     * @param array<string, ValidateResult> $properties
+     *
+     * @psalm-mutation-free
      */
-    public function __construct(iterable $properties)
+    public function __construct(public readonly array $properties)
     {
-        $arrayProperties = [];
-        $valid = true;
-
-        foreach ($properties as $name => $property) {
-            $valid = $valid && $property->isValid();
-            $arrayProperties[$name] = $property;
-        }
-
-        $this->properties = $arrayProperties;
-        $this->valid = $valid;
+        $this->valid = array_all(
+            $this->properties,
+            static fn (ValidateResult $property): bool => $property->isValid(),
+        );
     }
 
     #[Override]

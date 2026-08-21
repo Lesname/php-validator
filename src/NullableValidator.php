@@ -10,6 +10,9 @@ use LesValidator\ValidateResult\ValidValidateResult;
 
 final class NullableValidator implements Validator
 {
+    /**
+     * @psalm-mutation-free
+     */
     public function __construct(public readonly Validator $subValidator)
     {}
 

@@ -12,6 +12,9 @@ use LesValidator\ValidateResult\Composite\PropertiesValidateResult;
 
 final class PropertyValidator implements Validator
 {
+    /**
+     * @psalm-mutation-free
+     */
     public function __construct(
         private readonly Key $key,
         private readonly Validator $validator,

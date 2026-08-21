@@ -11,14 +11,16 @@ use LesValidator\Validator;
 
 final class ItemsValidator implements Validator
 {
+    /**
+     * @psalm-mutation-free
+     */
     public function __construct(public readonly Validator $itemValidator)
     {}
 
     #[Override]
     public function validate(mixed $input): ValidateResult
     {
-        assert(is_array($input));
-        /** @var array<int, mixed> $input */
+        assert(is_array($input) && array_is_list($input));
 
         $itemValidator = $this->itemValidator;
 

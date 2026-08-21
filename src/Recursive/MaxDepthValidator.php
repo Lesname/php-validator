@@ -13,6 +13,9 @@ final class MaxDepthValidator implements Validator
 {
     private int $depth = 0;
 
+    /**
+     * @psalm-mutation-free
+     */
     public function __construct(
         private readonly Validator $subValidator,
         private readonly int $maxDepth,

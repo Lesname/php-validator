@@ -11,12 +11,18 @@ use Override;
  */
 final class ValidValidateResult implements ValidateResult
 {
+    /**
+     * @psalm-pure
+     */
     #[Override]
     public function isValid(): bool
     {
         return true;
     }
 
+    /**
+     * @psalm-pure
+     */
     #[Override]
     public function jsonSerialize(): mixed
     {

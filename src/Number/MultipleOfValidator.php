@@ -15,6 +15,9 @@ final class MultipleOfValidator implements Validator
 {
     private readonly int $precision;
 
+    /**
+     * @psalm-pure
+     */
     public function __construct(
         private readonly float|int $multipleOf,
         private readonly float|int $offset = 0,
@@ -27,6 +30,9 @@ final class MultipleOfValidator implements Validator
         $this->precision = $precision ?? (int)ini_get('precision');
     }
 
+    /**
+     * @psalm-mutation-free
+     */
     #[Override]
     public function validate(mixed $input): ValidateResult
     {
@@ -42,6 +48,9 @@ final class MultipleOfValidator implements Validator
         return new ValidValidateResult();
     }
 
+    /**
+     * @psalm-mutation-free
+     */
     private function isMultipleOf(float|int $value): bool
     {
         if (is_int($value) && is_int($this->offset) && is_int($this->multipleOf)) {
@@ -64,6 +73,8 @@ final class MultipleOfValidator implements Validator
 
     /**
      * @return numeric-string
+     *
+     * @psalm-mutation-free
      */
     private function floatToString(float $float): string
     {

@@ -16,10 +16,15 @@ final class PropertyKeysValidator implements Validator
 {
     /**
      * @param array<string|Key> $keys
+     *
+     * @psalm-mutation-free
      */
     public function __construct(private readonly array $keys)
     {}
 
+    /**
+     * @psalm-mutation-free
+     */
     #[Override]
     public function validate(mixed $input): ValidateResult
     {
@@ -45,6 +50,9 @@ final class PropertyKeysValidator implements Validator
         return new ValidValidateResult();
     }
 
+    /**
+     * @psalm-mutation-free
+     */
     private function isKeyAllowed(mixed $key): bool
     {
         if (!is_string($key)) {

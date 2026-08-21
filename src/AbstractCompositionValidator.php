@@ -9,6 +9,9 @@ use LesValidator\ValidateResult\ValidateResult;
 
 abstract class AbstractCompositionValidator implements Validator
 {
+    /**
+     * @psalm-impure
+     */
     #[Override]
     public function validate(mixed $input): ValidateResult
     {
@@ -17,5 +20,8 @@ abstract class AbstractCompositionValidator implements Validator
             ->validate($input);
     }
 
+    /**
+     * @psalm-pure
+     */
     abstract protected function composeValidator(): Validator;
 }

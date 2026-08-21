@@ -11,38 +11,62 @@ use LesValidator\TypeValidator;
 use LesValidator\ChainValidator;
 use LesValidator\String\LengthValidator;
 
+/**
+ * @deprecated will be dropped
+ */
 final class StringValidatorBuilder implements ValidatorBuilder
 {
+    /**
+     * @psalm-pure
+     */
     public function __construct(
         private readonly ?int $minLength = null,
         private readonly ?int $maxLength = null,
     ) {}
 
+    /**
+     * @psalm-mutation-free
+     */
     public function getMinLength(): ?int
     {
         return $this->minLength;
     }
 
+    /**
+     * @psalm-mutation-free
+     */
     public function getMaxLength(): ?int
     {
         return $this->maxLength;
     }
 
+    /**
+     * @psalm-pure
+     */
     public function withBetween(int $minLength, int $maxLength): self
     {
         return new self($minLength, $maxLength);
     }
 
+    /**
+     * @psalm-mutation-free
+     */
     public function withMinLength(int $minLength): self
     {
         return new self($minLength, $this->maxLength);
     }
 
+    /**
+     * @psalm-mutation-free
+     */
     public function withMaxLength(int $maxLength): self
     {
         return new self($this->minLength, $maxLength);
     }
 
+    /**
+     * @psalm-mutation-free
+     */
     #[Override]
     public function build(): Validator
     {

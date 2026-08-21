@@ -13,14 +13,18 @@ use Override;
 final class ErrorValidateResult implements ValidateResult
 {
     /**
-     * @param string $code
      * @param array<string, string | integer | float | array<string | integer | float | null> | null> $context
+     *
+     * @psalm-pure
      */
     public function __construct(
         public readonly string $code,
         public readonly array $context = [],
     ) {}
 
+    /**
+     * @psalm-pure
+     */
     #[Override]
     public function isValid(): bool
     {

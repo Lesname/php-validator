@@ -13,11 +13,17 @@ use LesValidator\ValidateResult\Composite\PropertiesValidateResult;
 
 final class RangeValidator implements Validator
 {
+    /**
+     * @psalm-mutation-free
+     */
     public function __construct(
         private readonly string $minKey = 'min',
         private readonly string $maxKey = 'max',
     ) {}
 
+    /**
+     * @psalm-mutation-free
+     */
     #[Override]
     public function validate(mixed $input): ValidateResult
     {

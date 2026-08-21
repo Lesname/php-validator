@@ -73,6 +73,9 @@ final class TypeValidator implements Validator
         return new self(self::STRING);
     }
 
+    /**
+     * @psalm-mutation-free
+     */
     #[Override]
     public function validate(mixed $input): ValidateResult
     {
@@ -97,11 +100,17 @@ final class TypeValidator implements Validator
         return new ValidValidateResult();
     }
 
+    /**
+     * @psalm-pure
+     */
     private function isCollection(mixed $input): bool
     {
         return is_array($input) && array_is_list($input);
     }
 
+    /**
+     * @psalm-pure
+     */
     private function isComposite(mixed $input): bool
     {
         return is_array($input) && (count($input) === 0 || !array_is_list($input));

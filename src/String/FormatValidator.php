@@ -15,10 +15,15 @@ final class FormatValidator implements Validator
 {
     /**
      * @param class-string<StringFormatValueObject> $format
+     *
+     * @psalm-pure
      */
     public function __construct(public readonly string $format)
     {}
 
+    /**
+     * @psalm-mutation-free
+     */
     #[Override]
     public function validate(mixed $input): ValidateResult
     {

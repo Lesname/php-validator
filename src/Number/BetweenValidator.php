@@ -12,11 +12,17 @@ use LesValidator\Validator;
 
 final class BetweenValidator implements Validator
 {
+    /**
+     * @psalm-pure
+     */
     public function __construct(
         public readonly float | int | null $minimal,
         public readonly float | int | null $maximal,
     ) {}
 
+    /**
+     * @psalm-mutation-free
+     */
     #[Override]
     public function validate(mixed $input): ValidateResult
     {

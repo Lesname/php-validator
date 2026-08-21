@@ -12,16 +12,25 @@ use LesValidator\ChainValidator;
 use LesValidator\Composite\PropertyKeysValidator;
 use LesValidator\Composite\PropertyValuesValidator;
 
+/**
+ * @deprecated will be dropped
+ *
+ * @psalm-mutable
+ */
 final class ArrayCompositeValidatorBuilder implements ValidatorBuilder
 {
     /**
      * @param array<string, Validator>|null $valueValidators
+     *
+     * @psalm-pure
      */
     public function __construct(private readonly ?array $valueValidators = null)
     {}
 
     /**
      * @param array<string, Validator> $validators
+     *
+     * @psalm-pure
      */
     public function withArrayCompositeValidators(array $validators): self
     {
@@ -30,6 +39,8 @@ final class ArrayCompositeValidatorBuilder implements ValidatorBuilder
 
     /**
      * @param array<string, Validator> $valueValidators
+     *
+     * @psalm-pure
      */
     public function withValueValidators(array $valueValidators): self
     {
