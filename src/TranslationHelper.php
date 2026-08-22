@@ -6,6 +6,8 @@ namespace LesValidator;
 
 /**
  * @psalm-immutable
+ *
+ * @deprecated use ConfigProvider
  */
 final class TranslationHelper
 {
