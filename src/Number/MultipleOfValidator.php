@@ -78,15 +78,18 @@ final class MultipleOfValidator implements Validator
      */
     private function floatToString(float $float): string
     {
+        $string = (string)$float;
+
+        if (!str_contains($string, 'E')) {
+            return $string;
+        }
+
         $string = rtrim(
-            rtrim(
-                sprintf(
-                    '%.' . $this->precision . 'f',
-                    $float
-                ),
-                '0'
+            sprintf(
+                '%.' . $this->precision . 'f',
+                $float
             ),
-            '.'
+            '.0'
         );
 
         assert(is_numeric($string));
